@@ -4,11 +4,54 @@
   .renderer OpenGL
   .width 800
   .height 600
-  .fps 60.0
+  .fps 60
   @ ./screen video:output {
-    #%graph.x 1044
+    #%graph.x 729
     #%graph.y 216
     .always-on-top true
     .show-cursor true
   }
+  @ ./p3d-1 video:gl:p3d {
+    #%graph.x 516
+    #%graph.y 216
+    .code "
+
+    @Inject Property y;
+    @Inject Property camRotX;
+    
+    @Override
+    public void setup() 
+    \{
+    \}
+
+    @Override
+    public void update()
+    \{
+        if(!y.isAnimating())
+        \{
+            y.set(0).to(PI * 2).in(10);
+        \}
+        
+        if(!camRotX.isAnimating())
+            camRotX.to(-300, 300).in(3).easeInOut();
+    \}
+    
+    @Override
+    public void draw() 
+    \{
+        background(128);
+        camera(sin(d(y)) * 800, sin(d(y)) * 300, cos(d(y)) * 800,
+                0, 0, 0,
+                0, 1, 0);
+        noFill();
+        stroke(0);
+        strokeWeight(1);
+        //rotateY(d(y));
+        sphere(500);
+        //rotateX(d(y));
+        sphere(250);
+    \}
+"
+  }
+  ~ ./p3d-1!out ./screen!in
 }
