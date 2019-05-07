@@ -12,8 +12,8 @@
     .show-cursor true
   }
   @ ./p3d-1 video:gl:p3d {
-    #%graph.x 516
-    #%graph.y 216
+    #%graph.x 142
+    #%graph.y 241
     .code "
 
     @Inject Property y;
@@ -29,7 +29,7 @@
     \{
         if(!y.isAnimating())
         \{
-            y.set(0).to(PI * 2).in(10);
+            y.set(0).to(TWO_PI).in(10);
         \}
         
         if(!camRotX.isAnimating())
@@ -39,19 +39,89 @@
     @Override
     public void draw() 
     \{
-        background(128);
+        background(64);
         camera(sin(d(y)) * 800, sin(d(y)) * 300, cos(d(y)) * 800,
                 0, 0, 0,
                 0, 1, 0);
         noFill();
-        stroke(0);
-        strokeWeight(1);
+        stroke((acos(d(y)) + 1) * 127, (sin(d(y)) + 1) * 127, (cos(d(y)) + 1) * 127);
+        strokeWeight(2);
         //rotateY(d(y));
-        sphere(500);
+        sphere(500 - sin(d(y)) * 100);
+        stroke((sin(d(y)) + 1) * 127, (cos(d(y)) + 1) * 127, (acos(d(y)) + 1) * 127);
         //rotateX(d(y));
-        sphere(250);
+        sphere(250 + sin(d(y)) * 50);
     \}
 "
   }
-  ~ ./p3d-1!out ./screen!in
+  @ ./vidFeedback video:gl:p3d {
+    #%graph.x 412
+    #%graph.y 229
+    .code "
+
+    @In(1) PImage source;
+    @In(2) PImage frameDelay;
+    @P(1) float scale;
+    
+    
+    @Override
+    public void setup() \{
+        
+    \}
+
+    @Override
+    public void draw() \{
+        noStroke();
+        //textureMode(NORMAL);
+        
+        beginShape(QUADS);
+        texture(source);
+        
+        vertex(0, 0, 0, 0);
+        vertex(width, 0, source.width, 0);
+        vertex(width, height, source.width, source.height);
+        vertex(0, height, 0, source.height);
+        endShape();
+        
+        blendMode(ADD);
+        beginShape(QUADS);
+        texture(source);
+        
+        vertex(scale, scale, 0, 0);
+        vertex(width-scale, scale, frameDelay.width, 0);
+        vertex(width-scale, height-scale, frameDelay.width, frameDelay.height);
+        vertex(scale, height-scale, 0, frameDelay.height);
+        endShape();
+                
+    \}
+
+"
+    .scale 50
+  }
+  @ ./frame-delay-1 video:analysis:frame-delay {
+    #%graph.x 372
+    #%graph.y 572
+  }
+  @ ./feedback video:custom {
+    #%graph.x 101
+    #%graph.y 491
+    .code "
+
+    @OffScreen PGraphics lastFrame;
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+
+    \}
+    
+"
+  }
+  ~ ./vidFeedback!out ./frame-delay-1!in
+  ~ ./frame-delay-1!out ./vidFeedback!frame-delay
+  ~ ./vidFeedback!out ./screen!in
+  ~ ./p3d-1!out ./vidFeedback!source
 }
