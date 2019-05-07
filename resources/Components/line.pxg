@@ -1,0 +1,35 @@
+#%praxis.version 4.2.0
+@ ./line video:gl:p2d {
+  #%graph.x 0
+  #%graph.y 0
+  .code "
+
+    @P(1) float startX;
+    @P(2) float startY;
+    @P(3) float endX;
+    @P(4) float endY;
+    @P(5) float weight;
+    
+    private float x1, y1, x2, y2, w;
+    
+    @T(1) void Trigger() \{
+        x1 = startX;
+        y1 = startY;
+        x2 = endX;
+        y2 = endY;
+        w = weight;
+    \}
+    
+    @Override
+    public void setup() \{
+        stroke(255);
+    \}
+
+    @Override
+    public void draw() \{
+        strokeWeight(w);
+        line(x1, y1, x2, y2);
+    \}
+"
+  .weight 1
+}

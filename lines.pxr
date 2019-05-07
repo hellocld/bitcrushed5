@@ -6,57 +6,9 @@
   .height 600
   .fps 60.0
   @ ./screen video:output {
-    #%graph.x 638
-    #%graph.y 227
+    #%graph.x 1044
+    #%graph.y 216
     .always-on-top true
     .show-cursor true
   }
-  @ ./line video:gl:p2d {
-    #%graph.x 554
-    #%graph.y 507
-    .code "
-
-    @P(1) float weight = 1;
-    @P(2) float startX;
-    @P(3) float startY;
-    @P(4) float endX;
-    @P(5) float endY;
-    private float x1, y1, x2, y2, w;
-
-    @T(1) void trigger() 
-    \{
-        x1 = startX;
-        y1 = startY;
-        x2 = endX;
-        y2 = endY;
-        w = weight;
-    \}
-    
-    @Override
-    public void setup() \{
-        stroke(255);
-    \}
-
-    @Override
-    public void draw() \{
-        strokeWeight(w);
-        line(x1, y1, x2, y2);
-    \}
-"
-    .weight 100
-    .start-y 100
-    .end-x 800
-    .end-y 100
-  }
-  @ ./random-1 core:array:random {
-    #%graph.x 241
-    #%graph.y 561
-    .values [array "1,34,10"]
-  }
-  @ ./every-1 core:routing:every {
-    #%graph.x 138
-    #%graph.y 305
-  }
-  ~ ./random-1!out ./line!start-y
-  ~ ./random-1!out ./line!end-y
 }
