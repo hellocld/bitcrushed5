@@ -6,14 +6,14 @@
   .height 600
   .fps 60
   @ ./screen video:output {
-    #%graph.x 729
-    #%graph.y 216
+    #%graph.x 762
+    #%graph.y 182
     .always-on-top true
     .show-cursor true
   }
   @ ./p3d-1 video:gl:p3d {
-    #%graph.x 142
-    #%graph.y 241
+    #%graph.x 82
+    #%graph.y 152
     .code "
 
     @Inject Property y;
@@ -39,7 +39,7 @@
     @Override
     public void draw() 
     \{
-        background(64);
+        background(0);
         camera(sin(d(y)) * 800, sin(d(y)) * 300, cos(d(y)) * 800,
                 0, 0, 0,
                 0, 1, 0);
@@ -54,60 +54,21 @@
     \}
 "
   }
-  @ ./vidFeedback video:gl:p3d {
-    #%graph.x 412
-    #%graph.y 229
-    .code "
-
-    @In(1) PImage source;
-    @In(2) PImage frameDelay;
-    @P(1) float scale;
-    
-    
-    @Override
-    public void setup() \{
-        
-    \}
-
-    @Override
-    public void draw() \{
-        noStroke();
-        //textureMode(NORMAL);
-        
-        beginShape(QUADS);
-        texture(source);
-        
-        vertex(0, 0, 0, 0);
-        vertex(width, 0, source.width, 0);
-        vertex(width, height, source.width, source.height);
-        vertex(0, height, 0, source.height);
-        endShape();
-        
-        blendMode(ADD);
-        beginShape(QUADS);
-        texture(source);
-        
-        vertex(scale, scale, 0, 0);
-        vertex(width-scale, scale, frameDelay.width, 0);
-        vertex(width-scale, height-scale, frameDelay.width, frameDelay.height);
-        vertex(scale, height-scale, 0, frameDelay.height);
-        endShape();
-                
-    \}
-
-"
-    .scale 50
-  }
-  @ ./frame-delay-1 video:analysis:frame-delay {
-    #%graph.x 372
-    #%graph.y 572
-  }
   @ ./feedback video:custom {
-    #%graph.x 101
-    #%graph.y 491
+    #%graph.x 357
+    #%graph.y 415
     .code "
 
-    @OffScreen PGraphics lastFrame;
+    @In(1) PImage in;
+    
+    @P(1) float frameW;
+    @P(2) float frameH;
+    @P(3) float offsetX;
+    @P(4) float offsetY;
+    @P(5) float opacity;
+    
+    @OffScreen PGraphics lastFrame, currentFrame;
+    
     @Override
     public void setup() \{
 
@@ -115,13 +76,143 @@
     
     @Override
     public void draw() \{
-
+        currentFrame.copy(in);
+        currentFrame.blendMode(SCREEN, opacity);
+        if(lastFrame != null)
+            currentFrame.image(
+                    lastFrame, 
+                    (width - frameW)/2 + offsetX, 
+                    (height - frameH)/2 + offsetY, 
+                    frameW, 
+                    frameH);
+        lastFrame.copy(currentFrame);
+        copy(currentFrame);
+        release(in);
     \}
     
 "
+    .frame-w 820
+    .frame-h 620
+    .opacity 0.95
   }
-  ~ ./vidFeedback!out ./frame-delay-1!in
-  ~ ./frame-delay-1!out ./vidFeedback!frame-delay
-  ~ ./vidFeedback!out ./screen!in
-  ~ ./p3d-1!out ./vidFeedback!source
+  @ ./p2d-1 video:gl:p2d {
+    #%graph.x 193
+    #%graph.y 480
+    .code "
+
+    @Inject Property prop;
+    @Inject Property colR, colG, colB;
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        if(!prop.isAnimating())
+            prop.set(100).to(height-120, 0).in(10).easeInOut();
+        
+        if(!colR.isAnimating())
+            colR.set(0).to(255, 0).in(5);
+        if(!colG.isAnimating())
+            colG.set(0).to(255, 0).in(7);
+        if(!colB.isAnimating())
+            colB.set(0).to(255, 0).in(9);
+        
+        
+        fill(d(colR), d(colG), d(colB));
+        rect(width/2, d(prop), sin(millis()/1000.0) * 200, 20);
+    \}
+"
+  }
+  @ ./p3d-2 video:gl:p3d {
+    #%graph.x 24
+    #%graph.y 254
+    #%graph.minimized true
+    .code "
+
+    @Inject Property prop;
+    @Inject Property colR, colG, colB;
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        camera(0, 0, -300,
+                0, 0, 0,
+                0, 1, 0);
+        if(!prop.isAnimating())
+            prop.set(100).to(height-120, 0).in(10).easeInOut();
+        
+        if(!colR.isAnimating())
+            colR.set(0).to(255, 0).in(0.1);
+        if(!colG.isAnimating())
+            colG.set(0).to(255, 0).in(12);
+        if(!colB.isAnimating())
+            colB.set(0).to(255, 0).in(21);
+        
+        
+        fill(d(colR), d(colG), d(colB));
+        strokeWeight(10);
+        rotateX(millis()/1000.0);
+        rotateY(millis()/1100.0);
+        rotateZ(millis()/1500.0);
+        box(120);
+    \}
+"
+  }
+  @ ./composite-1 video:composite {
+    #%graph.x 513
+    #%graph.y 141
+    .mode BitXor
+    .force-alpha true
+  }
+  @ ./feedback1 video:custom {
+    #%graph.x 259
+    #%graph.y 71
+    .code "
+
+    @In(1) PImage in;
+    
+    @P(1) float frameW;
+    @P(2) float frameH;
+    @P(3) float offsetX;
+    @P(4) float offsetY;
+    @P(5) float opacity;
+    
+    @OffScreen PGraphics lastFrame, currentFrame;
+    
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        currentFrame.copy(in);
+        currentFrame.blendMode(SCREEN, opacity);
+        if(lastFrame != null)
+            currentFrame.image(
+                    lastFrame, 
+                    (width - frameW)/2 + offsetX, 
+                    (height - frameH)/2 + offsetY, 
+                    frameW, 
+                    frameH);
+        lastFrame.copy(currentFrame);
+        copy(currentFrame);
+        release(in);
+    \}
+    
+"
+    .frame-w 800
+    .frame-h 600
+    .opacity 0.95
+  }
+  ~ ./p3d-2!out ./feedback!in
+  ~ ./composite-1!out ./screen!in
+  ~ ./feedback!out ./composite-1!in
+  ~ ./p3d-1!out ./feedback1!in
+  ~ ./feedback1!out ./composite-1!src
 }
