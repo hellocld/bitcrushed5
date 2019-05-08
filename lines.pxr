@@ -3,7 +3,6 @@
   #%praxis.version 4.2.0
   .renderer OpenGL
   .width 800
-  .height 600
   .fps 60
   @ ./screen video:output {
     #%graph.x 762
@@ -45,7 +44,7 @@
                 0, 1, 0);
         noFill();
         stroke((acos(d(y)) + 1) * 127, (sin(d(y)) + 1) * 127, (cos(d(y)) + 1) * 127);
-        strokeWeight(2);
+        strokeWeight(1);
         //rotateY(d(y));
         sphere(500 - sin(d(y)) * 100);
         stroke((sin(d(y)) + 1) * 127, (cos(d(y)) + 1) * 127, (acos(d(y)) + 1) * 127);
@@ -92,7 +91,7 @@
     
 "
     .frame-w 820
-    .frame-h 620
+    .frame-h 500
     .opacity 0.95
   }
   @ ./p2d-1 video:gl:p2d {
@@ -207,8 +206,8 @@
     
 "
     .frame-w 800
-    .frame-h 600
-    .opacity 0.95
+    .frame-h 480
+    .opacity 0.995
   }
   ~ ./p3d-2!out ./feedback!in
   ~ ./composite-1!out ./screen!in

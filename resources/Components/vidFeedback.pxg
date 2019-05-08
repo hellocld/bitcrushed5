@@ -1,0 +1,42 @@
+#%praxis.version 4.2.0
+@ ./feedback video:custom {
+  #%graph.x 0
+  #%graph.y 0
+  .code "
+
+    @In(1) PImage in;
+    
+    @P(1) float frameW;
+    @P(2) float frameH;
+    @P(3) float offsetX;
+    @P(4) float offsetY;
+    @P(5) float opacity;
+    
+    @OffScreen PGraphics lastFrame, currentFrame;
+    
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        currentFrame.copy(in);
+        currentFrame.blendMode(SCREEN, opacity);
+        if(lastFrame != null)
+            currentFrame.image(
+                    lastFrame, 
+                    (width - frameW)/2 + offsetX, 
+                    (height - frameH)/2 + offsetY, 
+                    frameW, 
+                    frameH);
+        lastFrame.copy(currentFrame);
+        copy(currentFrame);
+        release(in);
+    \}
+    
+"
+  .frame-w 820
+  .frame-h 500
+  .opacity 0.95
+}
