@@ -2,11 +2,11 @@
   #%autostart true
   #%praxis.version 4.2.0
   @ ./output audio:output {
-    #%graph.x 879
-    #%graph.y 209
+    #%graph.x 657
+    #%graph.y 195
   }
   @ ./input-1 audio:input {
-    #%graph.x 306
+    #%graph.x 347
     #%graph.y 195
   }
   @ ./fft audio:custom {
@@ -217,9 +217,9 @@ import java.io.*;
 "
   }
   @ ./send-1 core:routing:send {
-    #%graph.x 659
-    #%graph.y 249
-    .address /lines/fftGet.fftData
+    #%graph.x 657
+    #%graph.y 303
+    .address /lines/fftGet.fft-data
   }
   ~ ./input-1!out-1 ./fft!in
   ~ ./fft!power-data ./send-1!in

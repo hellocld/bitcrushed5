@@ -5,8 +5,8 @@
   .width 800
   .fps 60
   @ ./screen video:output {
-    #%graph.x 1306
-    #%graph.y 240
+    #%graph.x 1274
+    #%graph.y 152
     .always-on-top true
     .show-cursor true
   }
@@ -296,4 +296,5 @@ vDz2e+Q9bn5mPQfKqDxTUlc73rkIO49LqztthHU7VtDzO1EomTtFoVY="
   ~ ./variable-1!out ./line!end-y
   ~ ./fftGet!data ./variable-1!trigger
   ~ ./fftGet!data ./line!trigger
+  ~ ./composite-1!out ./screen!in
 }
