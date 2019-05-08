@@ -5,8 +5,8 @@
   .width 800
   .fps 60
   @ ./screen video:output {
-    #%graph.x 762
-    #%graph.y 182
+    #%graph.x 1306
+    #%graph.y 240
     .always-on-top true
     .show-cursor true
   }
@@ -95,8 +95,8 @@
     .opacity 0.95
   }
   @ ./p2d-1 video:gl:p2d {
-    #%graph.x 193
-    #%graph.y 480
+    #%graph.x 161
+    #%graph.y 461
     .code "
 
     @Inject Property prop;
@@ -209,9 +209,91 @@
     .frame-h 480
     .opacity 0.995
   }
+  @ ./fftGet core:custom {
+    #%graph.x 536
+    #%graph.y 356
+    .code "
+
+    @P(0) float\[\] fftData;
+    
+    @P(1) int channel;
+    @Out(1) Output data;
+    @Out(2) Output channels;
+    
+    @Override
+    public void init() \{
+        
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fftData.length > 0)
+            data.send(fftData\[constrain(channel, 0, fftData.length)\]);
+        log(INFO, \"Channels: \" + fftData.length);
+    \}
+    
+"
+    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgPq/YND0ffIA9MOlaPSMrRj0dwIo9JcvyPN1IQjyG
+SGw8g5nCPE2CcTxwoFs8s5zFPQJ+0D2gdtk9A/AqPNgc0z0KaDg9Sd4QPbcfmzyAJEM8zYzHPJcW
+vDz2e+Q9bn5mPQfKqDxTUlc73rkIO49LqztthHU7VtDzO1EomTtFoVY="
+  }
+  @ ./line video:gl:p2d {
+    #%graph.x 1152
+    #%graph.y 248
+    .code "
+
+    @P(1) float startX;
+    @P(2) float startY;
+    @P(3) float endX;
+    @P(4) float endY;
+    @P(5) float weight;
+    
+    private float x1, y1, x2, y2, w;
+    
+    @T(1) void Trigger() \{
+        x1 = startX;
+        y1 = startY;
+        x2 = endX;
+        y2 = endY;
+        w = weight;
+    \}
+    
+    @Override
+    public void setup() \{
+        stroke(255);
+    \}
+
+    @Override
+    public void draw() \{
+        strokeWeight(w);
+        line(x1, y1, x2, y2);
+    \}
+"
+    .start-y 34.344637393951416
+    .end-x 800
+    .end-y 34.344637393951416
+    .weight 10
+  }
+  @ ./multiply-1 core:math:multiply {
+    #%graph.x 671
+    #%graph.y 356
+    .value 100
+  }
+  @ ./variable-1 core:variable {
+    #%graph.x 880
+    #%graph.y 353
+    .value 34.344637393951416
+  }
   ~ ./p3d-2!out ./feedback!in
-  ~ ./composite-1!out ./screen!in
   ~ ./feedback!out ./composite-1!in
   ~ ./p3d-1!out ./feedback1!in
   ~ ./feedback1!out ./composite-1!src
+  ~ ./line!out ./screen!in
+  ~ ./fftGet!data ./multiply-1!in
+  ~ ./multiply-1!out ./variable-1!value
+  ~ ./variable-1!out ./line!start-y
+  ~ ./variable-1!out ./line!end-y
+  ~ ./fftGet!data ./variable-1!trigger
+  ~ ./fftGet!data ./line!trigger
 }

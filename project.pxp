@@ -2,8 +2,8 @@ add-libs [file-list "config/libs/*.jar"]
 
 # <<<BUILD>>>
 include [file "lines.pxr"]
-include [file "inputTesting.pxr"]
+include [file "audio.pxr"]
 
 # <<<RUN>>>
 include [file "config/lines_autostart"]
-include [file "config/inputTesting_autostart"]
+include [file "config/audio_autostart"]
