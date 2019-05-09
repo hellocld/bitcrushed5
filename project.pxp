@@ -3,7 +3,9 @@ add-libs [file-list "config/libs/*.jar"]
 # <<<BUILD>>>
 include [file "lines.pxr"]
 include [file "audio.pxr"]
+include [file "glitches.pxr"]
 
 # <<<RUN>>>
 include [file "config/lines_autostart"]
 include [file "config/audio_autostart"]
+include [file "config/glitches_autostart"]
