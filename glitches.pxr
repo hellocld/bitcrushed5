@@ -6,21 +6,14 @@
   .height 600
   .fps 60.0
   @ ./screen video:output {
-    #%graph.x 752
-    #%graph.y 457
+    #%graph.x 1143
+    #%graph.y 286
     .always-on-top true
     .show-cursor true
   }
-  @ ./player-1 video:player {
-    #%graph.x 109
-    #%graph.y 106
-    .video file:/C:/Users/Chris%20Langford/Documents/ShareX/Screenshots/2019-05/2019-05-08_10-23-44.mp4
-    .position 0.7834561898092643
-    .resize-mode Scale
-  }
   @ ./glitchScanline video:custom {
-    #%graph.x 430
-    #%graph.y 106
+    #%graph.x 327
+    #%graph.y 191
     .code "
 
     @In(1) PImage in;
@@ -56,11 +49,12 @@
     \}
     
 "
-    .randomness 30
+    .thickness 3
+    .randomness 5
   }
   @ ./blur video:gl:p2d {
-    #%graph.x 466
-    #%graph.y 337
+    #%graph.x 801
+    #%graph.y 83
     .code "
 
     @In(1) PImage in;
@@ -154,11 +148,11 @@ void main() \{
  
   gl_FragColor = avgValue / coefficientSum;
 \}"
-    .size 3
+    .size 6
   }
   @ ./feedback video:custom {
-    #%graph.x 658
-    #%graph.y 229
+    #%graph.x 975
+    #%graph.y 70
     .code "
 
     @In(1) PImage in;
@@ -193,13 +187,52 @@ void main() \{
     \}
     
 "
-    .frame-w 600
-    .frame-h 800
-    .offset-x 100
-    .opacity .3
+    .frame-w 900
+    .frame-h 550
+    .offset-x 10
+    .offset-y 40
+    .opacity .75
   }
-  ~ ./player-1!out ./glitchScanline!in
+  @ ./p3d-1 video:gl:p3d {
+    #%graph.x 146
+    #%graph.y 160
+    .code "
+
+    @P(1) @ID(\"Shape\") PShape loadedShape;
+    
+    @P(0) Property prop;
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        //perspective(PI/3.0, width/height, 0, 400);
+        camera(0, 0, -100,
+                0, 0, 0,
+                0, 1, 0);
+        if(!prop.isAnimating())
+            prop.set(0).to(TWO_PI).in(10);
+
+        directionalLight(255, 255, 255, 0, 0, 1);
+        directionalLight(255, 255, 255, 1, 0, 1);
+        rotateY(d(prop));
+        rotateX(PI);
+        
+        scale (2);
+        if(loadedShape != null) \{
+            shape(loadedShape);
+        \}
+    \}
+    
+    
+"
+    .prop 5.405096866537766
+    .Shape [file "resources/Models/danimal.obj"]
+  }
   ~ ./glitchScanline!out ./blur!in
   ~ ./blur!out ./feedback!in
   ~ ./feedback!out ./screen!in
+  ~ ./p3d-1!out ./glitchScanline!in
 }
