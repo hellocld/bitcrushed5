@@ -1,0 +1,51 @@
+#%praxis.version 4.2.0
+@ ./osc core:custom {
+  #%graph.x 0
+  #%graph.y 0
+  .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+  .rate 1
+}

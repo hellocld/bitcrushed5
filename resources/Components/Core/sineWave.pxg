@@ -1,0 +1,33 @@
+#%praxis.version 4.2.0
+@ ./sineWave video:custom {
+  #%graph.x 0
+  #%graph.y 0
+  .code "
+
+    @P(1) @Type.Number(min = 0, max = 1, def = 0.5) float phase;
+    @P(2) float amplitude;
+    @P(3) float offset;
+    @P(4) float weight;
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        noFill();
+        stroke(255);
+        strokeWeight(weight);
+        beginShape();
+        for(int i = 0; i < width; i+=4)
+        \{
+            vertex(i, height/2 + sin(i * phase + offset) * amplitude);
+        \}
+        endShape();
+   \}
+    
+"
+  .phase 0.2615232467651367
+  .amplitude 19.5156307220459
+  .weight 5
+}

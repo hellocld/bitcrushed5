@@ -1,0 +1,42 @@
+#%praxis.version 4.2.0
+@ ./glitchScanline video:custom {
+  #%graph.x 0
+  #%graph.y 0
+  .code "
+
+    @In(1) PImage in;
+    
+    @P(1) @Type.Integer(min = 1, max = 1000, def = 1) int thickness;
+    @P(2) @Type.Integer(min = 0, max = 1000, def = 0) int randomness;
+    
+    @OffScreen PGraphics gfx;
+   
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        gfx.copy(in);
+        copy(gfx);
+        for(int i = 0; i < height/thickness; i++)
+        \{
+            drawLine(gfx, i*thickness, thickness, (int)random(-randomness, randomness));
+        \}
+        release(in);
+    \}
+    
+    private void drawLine(PGraphics g, int l, int t, int o)
+    \{
+        image(g, o, l, width, t, 0, l);
+        noStroke();
+        fill(0);
+        rect(0, l, o, t);
+        rect(width, l, o, t);
+    \}
+    
+"
+  .thickness 3
+  .randomness 5
+}

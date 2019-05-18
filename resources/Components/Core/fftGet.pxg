@@ -1,0 +1,30 @@
+#%praxis.version 4.2.0
+@ ./fftGet core:custom {
+  #%graph.x 0
+  #%graph.y 0
+  .code "
+
+    @P(0) float\[\] fftData;
+    
+    @P(1) int channel;
+    @Out(1) Output data;
+    @Out(2) Output channels;
+    
+    @Override
+    public void init() \{
+        
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fftData.length > 0)
+            data.send(fftData\[constrain(channel, 0, fftData.length)\]);
+        log(INFO, \"Channels: \" + fftData.length);
+    \}
+    
+"
+  .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgPq/YND0ffIA9MOlaPSMrRj0dwIo9JcvyPN1IQjyG
+SGw8g5nCPE2CcTxwoFs8s5zFPQJ+0D2gdtk9A/AqPNgc0z0KaDg9Sd4QPbcfmzyAJEM8zYzHPJcW
+vDz2e+Q9bn5mPQfKqDxTUlc73rkIO49LqztthHU7VtDzO1EomTtFoVY="
+}

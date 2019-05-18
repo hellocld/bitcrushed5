@@ -1,0 +1,901 @@
+@ /Danimal root:video {
+  #%autostart true
+  #%praxis.version 4.2.0
+  .renderer OpenGL
+  .width 800
+  .height 600
+  .fps 60.0
+  @ ./screen video:output {
+    #%graph.x 1381
+    #%graph.y 397
+    .device 2
+    .full-screen true
+    .always-on-top true
+    .undecorated true
+    .show-cursor true
+  }
+  @ ./feedback video:custom {
+    #%graph.x 801
+    #%graph.y 354
+    .code "
+
+    @In(1) PImage in;
+    
+    @P(1) float frameW;
+    @P(2) float frameH;
+    @P(3) float offsetX;
+    @P(4) float offsetY;
+    @P(5) float opacity;
+    
+    @OffScreen PGraphics lastFrame, currentFrame;
+    
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        currentFrame.copy(in);
+        currentFrame.blendMode(SCREEN, opacity);
+        if(lastFrame != null)
+            currentFrame.image(
+                    lastFrame, 
+                    (width - frameW)/2 + offsetX, 
+                    (height - frameH)/2 + offsetY, 
+                    frameW, 
+                    frameH);
+        lastFrame.copy(currentFrame);
+        copy(currentFrame);
+        release(in);
+    \}
+    
+"
+    .frame-w 790
+    .frame-h 620
+    .opacity 0.8
+  }
+  @ ./background video:gl:p2d {
+    #%graph.x 646
+    #%graph.y 56
+    .code "
+
+    @P(1) PImage background;
+    @P(2) float scrollX;
+    @P(3) float scrollY;
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+       
+        beginShape();
+        textureWrap(REPEAT);
+
+        if(background != null)
+            texture(background);
+        vertex(0, 0, scrollX * background.width, scrollY * background.height);
+        vertex(width, 0, width + scrollX * background.width, scrollY * background.height);
+        vertex(width, height, width  + scrollX * background.width, height + scrollY * background.height);
+        vertex(0, height, scrollX * background.width, height + scrollY * background.height);
+        endShape();
+    \}
+"
+    .background [file "resources/Sprites/danimal-metal-tile.png"]
+    .scroll-x -0.5274732112884521
+    .scroll-y -0.7197499871253967
+  }
+  @ ./composite-1 video:composite {
+    #%graph.x 1094
+    #%graph.y 276
+    .mode BitXor
+    .force-alpha true
+  }
+  @ ./crosshair video:gl:p2d {
+    #%graph.x 587
+    #%graph.y 795
+    .code "
+
+    @P(1) PImage tex;
+    @P(2) float size = 100;
+    
+    @Inject Property rot;
+
+    @T(3) void trigger()
+    \{
+        if(!rot.isAnimating()) 
+            rot.to(HALF_PI + d(rot)).in(0.5);
+    \}
+    
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+    
+        
+        float centerX = width/2;
+        float centerY = height/2;
+        beginShape();
+        if(tex != null) \{
+            noStroke();
+            texture(tex);
+            translate(centerX, centerY);
+            rotate(d(rot));
+            vertex(-size/2, -size/2, 0, 0);
+            vertex(size/2, -size/2, tex.width, 0);
+            vertex(size/2, size/2, tex.width, tex.height);
+            vertex(-size/2, size/2, 0, tex.height);
+        \}
+        endShape();
+    \}
+"
+    .tex [file "resources/Sprites/crosshair01.png"]
+    .size 600
+  }
+  @ ./foreground core:container {
+    #%graph.x 230
+    #%graph.y 637
+    #%praxis.version 4.2.0
+    @ ./waveform video:gl:p2d {
+      #%graph.x 328
+      #%graph.y 367
+      .code "
+
+    @P(0) float\[\] fftData;
+    @P(1) float scale;
+
+    float minBarH = 10;
+    int maxBars = 8;
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        //log(INFO, \"Data: \" + fftData.length);
+
+        if(fftData.length > 0) \{
+            int bars = (fftData.length > maxBars) ? maxBars : fftData.length;
+            int barW = (width/bars) - 16;
+            fill(255, 255);
+            stroke(0);
+            strokeWeight(4);
+            for(int i = 0; i < bars; i++) \{
+                rect(i * (barW + 32), 
+                        (height - fftData\[i\] * scale) - minBarH, 
+                        barW, 
+                        minBarH + (fftData\[i\] * scale));
+            \}
+        \}
+        
+        
+        
+    \}
+"
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
+jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
+dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+      .scale 30
+    }
+    @ ./mirror video:gl:p2d {
+      #%graph.x 562
+      #%graph.y 394
+      .code "
+
+    @In(1) PImage source;
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        image(source, 0,0, width/2, height);
+        beginShape();
+        texture(source);
+        vertex(width, 0, 0, 0);
+        vertex(width/2, 0, source.width, 0);
+        vertex(width/2, height, source.width, source.height);
+        vertex(width, height, 0, source.height);
+        endShape();
+    \}
+"
+    }
+    @ ./out-1 video:container:out {
+      #%graph.x 941
+      #%graph.y 559
+    }
+    ~ ./waveform!out ./mirror!source
+    ~ ./mirror!out ./out-1!in
+  }
+  @ ./main_gfx core:container {
+    #%graph.x 215
+    #%graph.y 383
+    #%praxis.version 4.2.0
+    @ ./p3d-1 video:gl:p3d {
+      #%graph.x 316
+      #%graph.y 502
+      .code "
+
+    @P(1) PShape obj;
+    
+    @Inject Property rotX, rotY, camZ;
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        if(!camZ.isAnimating())
+            camZ.set(-80).to(-60, -80).in(10).easeInOut();
+        camera(0, 0, d(camZ), 0, 0, 0, 0, 1, 0);
+        directionalLight(255, 255, 255, 1, 0, 1);
+        ambientLight(127, 127, 127);
+        // rotate the head
+        if(!rotX.isAnimating())
+            rotX.set(0).to(TWO_PI).in(10);
+        if(!rotY.isAnimating())
+            rotY.set(0).to(TWO_PI).in(15);
+        
+        rotateX(d(rotX));
+        rotateY(d(rotY));
+        rotateZ(PI);
+        if(obj != null)
+            shape(obj);
+    \}
+"
+      .obj [file "resources/Models/danimal.obj"]
+    }
+    @ ./glitchScanline video:custom {
+      #%graph.x 649
+      #%graph.y 502
+      .code "
+
+    @In(1) PImage in;
+    
+    @P(1) @Type.Integer(min = 1, max = 1000, def = 1) int thickness;
+    @P(2) @Type.Integer(min = 0, max = 1000, def = 0) int randomness;
+    
+    @OffScreen PGraphics gfx;
+   
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        gfx.copy(in);
+        copy(gfx);
+        for(int i = 0; i < height/thickness; i++)
+        \{
+            drawLine(gfx, i*thickness, thickness, (int)random(-randomness, randomness));
+        \}
+        release(in);
+    \}
+    
+    private void drawLine(PGraphics g, int l, int t, int o)
+    \{
+        image(g, o, l, width, t, 0, l);
+        noStroke();
+        fill(0);
+        rect(0, l, o, t);
+        rect(width, l, o, t);
+    \}
+    
+"
+      .thickness 3
+      .randomness 24
+    }
+    @ ./xform video:custom {
+      #%graph.x 501
+      #%graph.y 502
+      .code "
+
+    @In(1)
+    PImage in;
+    @P(1)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_x;
+    @P(2)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_y;
+    @P(3)
+    @Type.Number(min = -180, max = 180, def = 0)
+    double rotate;
+    @P(4)
+    @Type.Number(min = 0, max = 2, def = 1)
+    double scale;
+
+    @Override
+    public void draw() \{
+        double w2 = width / 2;
+        double h2 = height / 2;
+        translate(
+                map(translate_x, 0, 1, -w2, width + w2),
+                map(translate_y, 0, 1, -h2, height + h2)
+        );
+        rotate(radians(rotate));
+        scale(scale);
+        image(in, -w2, -h2);
+    \}
+"
+      .scale 1.7903225806451613
+    }
+    @ ./out-1 video:container:out {
+      #%graph.x 893
+      #%graph.y 502
+    }
+    @ ./fftTrigger core:custom {
+      #%graph.x 212
+      #%graph.y 189
+      .code "
+
+    @Out(1) Output out;
+    @P(0) float\[\] fftData;    
+    @P(1) int channel;
+    @P(2) float triggerVal;
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fftData.length > 0) \{
+            if(fftData\[channel\] > triggerVal)
+                out.send();
+        \}
+    \}
+    
+"
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
+jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
+dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+      .channel 1
+      .trigger-val 3
+    }
+    @ ./randoScanControl core:custom {
+      #%graph.x 415
+      #%graph.y 189
+      .code "
+
+    @Inject Property p;
+    @Out(1) Output val;
+    @T(1) void kick()
+    \{
+        if(!p.isAnimating())
+            p.set(50).to(1).in(0.25);
+    \}
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        val.send(d(p));
+    \}
+    
+"
+    }
+    ~ ./p3d-1!out ./xform!in
+    ~ ./xform!out ./glitchScanline!in
+    ~ ./glitchScanline!out ./out-1!in
+    ~ ./randoScanControl!val ./glitchScanline!randomness
+    ~ ./fftTrigger!out ./randoScanControl!kick
+  }
+  @ ./backX core:custom {
+    #%graph.x 304
+    #%graph.y 56
+    .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+    .rate -.6
+    .osc-type Triangle
+  }
+  @ ./backY core:custom {
+    #%graph.x 260
+    #%graph.y 191
+    .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+    .rate -.25
+    .osc-type Triangle
+  }
+  @ ./colourbalance video:custom {
+    #%graph.x 823
+    #%graph.y 723
+    .code "
+
+    @In(1) PImage in;
+    
+    @P(1) @Type.Number(min = 0, max = 1, def = 1)
+    double red;
+    @P(2) @Type.Number(min = 0, max = 1, def = 1)
+    double green;
+    @P(3) @Type.Number(min = 0, max = 1, def = 1)
+    double blue;
+
+    @Override
+    public void draw() \{
+        copy(in);
+        release(in);
+        noStroke();
+        blendMode(MULTIPLY);
+        fill(red * 255, green * 255, blue * 255);
+        rect(0, 0, width, height);
+    \}
+"
+    .green 0.10483870967741936
+    .blue 0.20967741935483872
+  }
+  @ ./composite-2 video:composite {
+    #%graph.x 1143
+    #%graph.y 570
+    .mode Screen
+    .force-alpha true
+  }
+  @ ./colourbalance1 video:custom {
+    #%graph.x 872
+    #%graph.y 69
+    .code "
+
+    @In(1) PImage in;
+    
+    @P(1) @Type.Number(min = 0, max = 1, def = 1)
+    double red;
+    @P(2) @Type.Number(min = 0, max = 1, def = 1)
+    double green;
+    @P(3) @Type.Number(min = 0, max = 1, def = 1)
+    double blue;
+
+    @Override
+    public void draw() \{
+        copy(in);
+        release(in);
+        noStroke();
+        blendMode(MULTIPLY);
+        fill(red * 255, green * 255, blue * 255);
+        rect(0, 0, width, height);
+    \}
+"
+    .green 0.10483870967741936
+    .blue 0.25806451612903225
+  }
+  @ ./bg core:container {
+    #%graph.x 456
+    #%graph.y 299
+    #%praxis.version 4.2.0
+    @ ./background video:gl:p2d {
+      #%graph.x 494
+      #%graph.y 297
+      .code "
+
+    @P(1) PImage background;
+    @P(2) float scrollX;
+    @P(3) float scrollY;
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+       
+        beginShape();
+        textureWrap(REPEAT);
+
+        if(background != null)
+            texture(background);
+        vertex(0, 0, scrollX * background.width, scrollY * background.height);
+        vertex(width, 0, width + scrollX * background.width, scrollY * background.height);
+        vertex(width, height, width  + scrollX * background.width, height + scrollY * background.height);
+        vertex(0, height, scrollX * background.width, height + scrollY * background.height);
+        endShape();
+    \}
+"
+      .background [file "resources/Sprites/danimal-metal-tile.png"]
+      .scroll-x -0.5274732112884521
+      .scroll-y -0.7197499871253967
+    }
+    @ ./backX core:custom {
+      #%graph.x 250
+      #%graph.y 297
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate -.6
+      .osc-type Triangle
+    }
+    @ ./backY core:custom {
+      #%graph.x 250
+      #%graph.y 432
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate -.25
+      .osc-type Triangle
+    }
+    @ ./colourbalance1 video:custom {
+      #%graph.x 840
+      #%graph.y 309
+      .code "
+
+    @In(1) PImage in;
+    
+    @P(1) @Type.Number(min = 0, max = 1, def = 1)
+    double red;
+    @P(2) @Type.Number(min = 0, max = 1, def = 1)
+    double green;
+    @P(3) @Type.Number(min = 0, max = 1, def = 1)
+    double blue;
+
+    @Override
+    public void draw() \{
+        copy(in);
+        release(in);
+        noStroke();
+        blendMode(MULTIPLY);
+        fill(red * 255, green * 255, blue * 255);
+        rect(0, 0, width, height);
+    \}
+"
+      .red 0.7021681666374207
+      .green 0.8496831655502319
+      .blue 0.6130239963531494
+    }
+    @ ./out-1 video:container:out {
+      #%graph.x 1307
+      #%graph.y 283
+    }
+    @ ./fftRGB core:custom {
+      #%graph.x 636
+      #%graph.y 527
+      .code "//
+
+    @P(0) float\[\] fftData;
+    @P(1) float scale;
+    @Out(1) Output r;
+    @Out(2) Output g;
+    @Out(3) Output b;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fftData.length > 3) \{
+            r.send(fftData\[1\] * scale);
+            g.send(fftData\[2\] * scale);
+            b.send(fftData\[3\] * scale);
+        \}
+    \}
+    
+"
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
+jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
+dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+      .scale 1
+    }
+    @ ./hsv video:gl:p2d {
+      #%graph.x 1084
+      #%graph.y 323
+      .code "
+
+    @P(1) @Type.Number(min=0, max=360, def=0) double hue;
+    @P(2) @Type.Number(min=0, max=2, def=1) double saturation;
+    @P(3) @Type.Number(min=0, max=2, def=1) double value;
+    
+    void updateUniforms() \{
+         shader.set(\"hue\", hue);
+         shader.set(\"saturation\", saturation);
+         shader.set(\"value\", value);
+    \}
+
+    
+    // BOILERPLATE BELOW
+    @In(0)
+    PImage in;
+    @P(0)
+    @Type.String(mime = GLSL_FRAGMENT_MIME, template = DEFAULT_FRAGMENT_SHADER)
+    @OnChange(\"updateShader\")
+    @Config.Port(false)
+    String fragment;
+
+    PShader shader;
+
+    @Override
+    public void setup() \{
+        updateShader();
+    \}
+
+    @Override
+    public void draw() \{
+        if (shader == null) \{
+            shader = createShader(DEFAULT_VERTEX_SHADER,
+                    fragment.isEmpty() ? DEFAULT_FRAGMENT_SHADER : fragment);
+        \}
+        shader(shader);
+        updateUniforms();
+        image(in, 0, 0);
+        resetShader();
+    \}
+
+    void updateShader() \{
+        shader = null;
+    \}
+
+"
+      .fragment "// https://gamedev.stackexchange.com/a/59808
+uniform sampler2D texture;
+
+uniform vec2 texOffset;
+
+uniform float hue;
+uniform float saturation;
+uniform float value;
+
+varying vec4 vertColor;
+varying vec4 vertTexCoord;
+
+vec3 rgb2hsv(vec3 c) \{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+\}
+
+vec3 hsv2rgb(vec3 c) \{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+\}
+
+void main() \{
+    vec4 textureColor = texture2D(texture, vertTexCoord.st) * vertColor;
+    vec3 fragRGB = textureColor.rgb;
+    vec3 fragHSV = rgb2hsv(fragRGB).xyz;
+    fragHSV.x += hue / 360.0;
+    fragHSV.y *= saturation;
+    fragHSV.z *= value;
+    fragRGB = hsv2rgb(fragHSV);
+    gl_FragColor = vec4(fragRGB, textureColor.a);
+\}"
+      .value 0.532258064516129
+    }
+    ~ ./backX!val ./background!scroll-x
+    ~ ./backY!val ./background!scroll-y
+    ~ ./background!out ./colourbalance1!in
+    ~ ./fftRGB!r ./colourbalance1!red
+    ~ ./fftRGB!g ./colourbalance1!green
+    ~ ./fftRGB!b ./colourbalance1!blue
+    ~ ./colourbalance1!out ./hsv!in
+    ~ ./hsv!out ./out-1!in
+  }
+  @ ./fftTrigger core:custom {
+    #%graph.x 320
+    #%graph.y 783
+    .code "
+
+    @Out(1) Output out;
+    @P(0) float\[\] fftData;    
+    @P(1) int channel;
+    @P(2) float triggerVal;
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fftData.length > 0) \{
+            if(fftData\[channel\] > triggerVal)
+                out.send();
+        \}
+    \}
+    
+"
+    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
+jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
+dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+    .channel 4
+    .trigger-val 1.6
+  }
+  ~ ./feedback!out ./composite-1!src
+  ~ ./backX!val ./background!scroll-x
+  ~ ./backY!val ./background!scroll-y
+  ~ ./crosshair!out ./colourbalance!in
+  ~ ./colourbalance!out ./composite-2!src
+  ~ ./composite-1!out ./composite-2!in
+  ~ ./composite-2!out ./screen!in
+  ~ ./colourbalance!out ./feedback!in
+  ~ ./background!out ./colourbalance1!in
+  ~ ./bg!out-1 ./composite-1!in
+  ~ ./fftTrigger!out ./crosshair!trigger
+  ~ ./main_gfx!out-1 ./feedback!in
+  ~ ./foreground!out-1 ./feedback!in
+}

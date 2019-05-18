@@ -1,0 +1,202 @@
+@ /video root:video {
+  #%autostart true
+  #%praxis.version 4.2.0
+  .renderer OpenGL
+  .width 800
+  .height 600
+  .fps 60.0
+  @ ./screen video:output {
+    #%graph.x 660
+    #%graph.y 210
+    .full-screen true
+    .always-on-top true
+    .undecorated true
+    .show-cursor true
+  }
+  @ ./sineWave video:custom {
+    #%graph.x 123
+    #%graph.y 183
+    .code "
+
+    @P(1) @Type.Number(min = 0, max = 1, def = 0.5) float phase;
+    @P(2) float amplitude;
+    @P(3) float offset;
+    @P(4) float weight;
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        noFill();
+        stroke(255);
+        strokeWeight(weight);
+        beginShape();
+        for(int i = 0; i < width; i+=4)
+        \{
+            vertex(i, height/2 + sin(i * phase + offset) * amplitude);
+        \}
+        endShape();
+   \}
+    
+"
+    .phase 0.2615232467651367
+    .amplitude 19.5156307220459
+    .weight 5
+  }
+  @ ./osc core:custom {
+    #%graph.x -37
+    #%graph.y 193
+    #%graph.minimized true
+    .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+    .rate 2
+  }
+  @ ./feedback video:custom {
+    #%graph.x 306
+    #%graph.y 183
+    .code "
+
+    @In(1) PImage in;
+    
+    @P(1) float frameW;
+    @P(2) float frameH;
+    @P(3) float offsetX;
+    @P(4) float offsetY;
+    @P(5) float opacity;
+    
+    @OffScreen PGraphics lastFrame, currentFrame;
+    
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        currentFrame.copy(in);
+        currentFrame.blendMode(SCREEN, opacity);
+        if(lastFrame != null)
+            currentFrame.image(
+                    lastFrame, 
+                    (width - frameW)/2 + offsetX, 
+                    (height - frameH)/2 + offsetY, 
+                    frameW, 
+                    frameH);
+        lastFrame.copy(currentFrame);
+        copy(currentFrame);
+        release(in);
+    \}
+    
+"
+    .frame-w 820
+    .frame-h 620
+    .opacity .9
+  }
+  @ ./osc1 core:custom {
+    #%graph.x -37
+    #%graph.y 237
+    #%graph.minimized true
+    .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+    .rate 10
+  }
+  @ ./multiply-2 core:math:multiply {
+    #%graph.x -37
+    #%graph.y 278
+    #%graph.minimized true
+    .value 100
+  }
+  ~ ./sineWave!out ./feedback!in
+  ~ ./feedback!out ./screen!in
+  ~ ./osc1!val ./multiply-2!in
+  ~ ./multiply-2!out ./sineWave!amplitude
+  ~ ./osc!val ./sineWave!phase
+}

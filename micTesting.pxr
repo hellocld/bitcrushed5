@@ -2,16 +2,16 @@
   #%autostart true
   #%praxis.version 4.2.0
   @ ./output audio:output {
-    #%graph.x 657
-    #%graph.y 195
+    #%graph.x 672
+    #%graph.y 189
   }
   @ ./input-1 audio:input {
-    #%graph.x 347
-    #%graph.y 195
+    #%graph.x 154
+    #%graph.y 164
   }
   @ ./fft audio:custom {
-    #%graph.x 509
-    #%graph.y 195
+    #%graph.x 418
+    #%graph.y -171
     #%graph.comment Custom FFT component sends\nfrequency data to video patch.\n\nGPL code ported from Beads\nhttp://www.beadsproject.net\n(c) Holger Crysandt / Ollie Bown
     .code "import org.jaudiolibs.pipes.Buffer;
 import org.jaudiolibs.pipes.impl.SingleInOut;
@@ -217,11 +217,35 @@ import java.io.*;
 "
   }
   @ ./send-1 core:routing:send {
-    #%graph.x 657
-    #%graph.y 303
-    .address /lines/fftGet.fft-data
+    #%graph.x 612
+    #%graph.y -117
+    .address /Danimal/foreground/waveform.fft-data
   }
+  @ ./send-2 core:routing:send {
+    #%graph.x 731
+    #%graph.y -32
+    .address /Danimal/bg/fftRGB.fft-data
+  }
+  @ ./send-3 core:routing:send {
+    #%graph.x 731
+    #%graph.y 39
+    .address /Danimal/fftTrigger.fft-data
+  }
+  @ ./level-1 audio:analysis:level {
+    #%graph.x 397
+    #%graph.y 39
+  }
+  @ ./sendScanKick core:routing:send {
+    #%graph.x 897
+    #%graph.y 129
+    .address /Danimal/main_gfx/fftTrigger.fft-data
+  }
+  ~ ./input-1!out-2 ./output!in-2
   ~ ./input-1!out-1 ./fft!in
   ~ ./fft!power-data ./send-1!in
   ~ ./fft!out ./output!in-1
+  ~ ./fft!power-data ./send-2!in
+  ~ ./fft!power-data ./send-3!in
+  ~ ./input-1!out-1 ./level-1!in
+  ~ ./fft!power-data ./sendScanKick!in
 }
