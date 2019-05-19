@@ -4,8 +4,10 @@ add-libs [file-list "config/libs/*.jar"]
 include [file "video.pxr"]
 include [file "micTesting.pxr"]
 include [file "Danimal.pxr"]
+include [file "Stevie.pxr"]
 
 # <<<RUN>>>
 include [file "config/video_autostart"]
 include [file "config/micTesting_autostart"]
 include [file "config/Danimal_autostart"]
+include [file "config/Stevie_autostart"]

@@ -1,0 +1,1191 @@
+@ /Stevie root:video {
+  #%autostart true
+  #%praxis.version 4.2.0
+  .renderer OpenGL
+  .width 800
+  .height 600
+  .fps 60.0
+  @ ./screen video:output {
+    #%graph.x 1400
+    #%graph.y 282
+    .device 2
+    .always-on-top true
+    .undecorated true
+    .show-cursor true
+  }
+  @ ./BG01 core:container {
+    #%graph.x 408
+    #%graph.y -2
+    #%praxis.version 4.2.0
+    @ ./background video:gl:p2d {
+      #%graph.x 487
+      #%graph.y 138
+      .code "
+
+    @P(1) PImage background;
+    @P(2) float scrollX;
+    @P(3) float scrollY;
+    @P(4) float scaleX;
+    @P(5) float scaleY;
+    
+    @Override
+    public void setup() \{
+        find(processing.core.PGraphics.class).ifPresent(pg-> \{
+            pg.hint(pg.DISABLE_TEXTURE_MIPMAPS);
+            //((PGraphicsOpenGL) pg).textureSampling(2);
+        \});
+    \}
+
+    @Override
+    public void draw() \{
+       
+        beginShape();
+        textureWrap(REPEAT);
+
+        if(background != null)
+            texture(background);
+        vertex(0, 0, 
+                (scrollX * background.width) * scaleX, (scrollY * background.height) * scaleY);
+               
+        vertex(width, 0, 
+                (width + scrollX * background.width) * scaleX, (scrollY * background.height) * scaleY);
+        
+        vertex(width, height, 
+                (width  + scrollX * background.width) * scaleX, (height + scrollY * background.height) * scaleY);
+        
+        vertex(0, height, 
+                (scrollX * background.width) * scaleX, (height + scrollY * background.height) * scaleY);
+        
+        
+        endShape();
+    \}
+"
+      .background [file "resources/Sprites/doodles/doodle04.png"]
+      .scroll-x -0.07181259989738464
+      .scroll-y -0.1132500022649765
+      .scale-x 1.9856774806976318
+      .scale-y 1.6645234823226929
+    }
+    @ ./backX core:custom {
+      #%graph.x 187
+      #%graph.y 352
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate -.6
+      .osc-type Triangle
+    }
+    @ ./backY core:custom {
+      #%graph.x 187
+      #%graph.y 472
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate -.25
+      .osc-type Triangle
+    }
+    @ ./hsv video:gl:p2d {
+      #%graph.x 850
+      #%graph.y 418
+      .code "
+
+    @P(1) @Type.Number(min=0, max=360, def=0) double hue;
+    @P(2) @Type.Number(min=0, max=2, def=1) double saturation;
+    @P(3) @Type.Number(min=0, max=2, def=1) double value;
+    
+    void updateUniforms() \{
+         shader.set(\"hue\", hue);
+         shader.set(\"saturation\", saturation);
+         shader.set(\"value\", value);
+    \}
+
+    
+    // BOILERPLATE BELOW
+    @In(0)
+    PImage in;
+    @P(0)
+    @Type.String(mime = GLSL_FRAGMENT_MIME, template = DEFAULT_FRAGMENT_SHADER)
+    @OnChange(\"updateShader\")
+    @Config.Port(false)
+    String fragment;
+
+    PShader shader;
+
+    @Override
+    public void setup() \{
+        updateShader();
+    \}
+
+    @Override
+    public void draw() \{
+        if (shader == null) \{
+            shader = createShader(DEFAULT_VERTEX_SHADER,
+                    fragment.isEmpty() ? DEFAULT_FRAGMENT_SHADER : fragment);
+        \}
+        shader(shader);
+        updateUniforms();
+        image(in, 0, 0);
+        resetShader();
+    \}
+
+    void updateShader() \{
+        shader = null;
+    \}
+
+"
+      .fragment "// https://gamedev.stackexchange.com/a/59808
+uniform sampler2D texture;
+
+uniform vec2 texOffset;
+
+uniform float hue;
+uniform float saturation;
+uniform float value;
+
+varying vec4 vertColor;
+varying vec4 vertTexCoord;
+
+vec3 rgb2hsv(vec3 c) \{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+\}
+
+vec3 hsv2rgb(vec3 c) \{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+\}
+
+void main() \{
+    vec4 textureColor = texture2D(texture, vertTexCoord.st) * vertColor;
+    vec3 fragRGB = textureColor.rgb;
+    vec3 fragHSV = rgb2hsv(fragRGB).xyz;
+    fragHSV.x += hue / 360.0;
+    fragHSV.y *= saturation;
+    fragHSV.z *= value;
+    fragRGB = hsv2rgb(fragHSV);
+    gl_FragColor = vec4(fragRGB, textureColor.a);
+\}"
+      .hue 152.15414174213961
+      .value 2.0
+    }
+    @ ./hue core:custom {
+      #%graph.x 466
+      #%graph.y 610
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate .05
+      .osc-type Triangle
+    }
+    @ ./multiply-1 core:math:multiply {
+      #%graph.x 629
+      #%graph.y 597
+      .value 360
+    }
+    @ ./xform video:custom {
+      #%graph.x 673
+      #%graph.y 325
+      .code "
+
+    @In(1)
+    PImage in;
+    @P(1)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_x;
+    @P(2)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_y;
+    @P(3)
+    @Type.Number(min = -180, max = 180, def = 0)
+    double rotate;
+    @P(4)
+    @Type.Number(min = 0, max = 2, def = 1)
+    double scale;
+
+    @Override
+    public void draw() \{
+        double w2 = width / 2;
+        double h2 = height / 2;
+        translate(
+                map(translate_x, 0, 1, -w2, width + w2),
+                map(translate_y, 0, 1, -h2, height + h2)
+        );
+        rotate(radians(rotate));
+        scale(scale);
+        image(in, -w2, -h2);
+    \}
+"
+      .rotate 119.61422213758289
+      .scale 2
+    }
+    @ ./out-1 video:container:out {
+      #%graph.x 1039
+      #%graph.y 460
+    }
+    @ ./sprite core:container:in {
+      #%graph.x -41
+      #%graph.y 310
+    }
+    @ ./scaleX core:custom {
+      #%graph.x 70
+      #%graph.y 28
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate 2
+    }
+    @ ./custom-1 core:custom {
+      #%graph.x 242
+      #%graph.y 28
+      .code "
+
+    @P(1) float val;
+    @Out(1) Output out;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        out.send(val + 1);
+    \}
+    
+"
+      .val 0.9856775403022766
+    }
+    @ ./scaleX1 core:custom {
+      #%graph.x 25
+      #%graph.y 153
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate 2
+      .time-offset 5
+      .osc-type Cosine
+    }
+    @ ./custom-2 core:custom {
+      #%graph.x 212
+      #%graph.y 153
+      .code "
+
+    @P(1) float val;
+    @Out(1) Output out;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        out.send(val + 1);
+    \}
+    
+"
+      .val 0.6645234823226929
+    }
+    @ ./rot1 core:custom {
+      #%graph.x 367
+      #%graph.y 445
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate 2
+      .time-offset 5
+      .osc-type Cosine
+    }
+    @ ./multiply-2 core:math:multiply {
+      #%graph.x 494
+      #%graph.y 364
+      .value 180
+    }
+    ~ ./backX!val ./background!scroll-x
+    ~ ./backY!val ./background!scroll-y
+    ~ ./hue!val ./multiply-1!in
+    ~ ./multiply-1!out ./hsv!hue
+    ~ ./background!out ./xform!in
+    ~ ./xform!out ./hsv!in
+    ~ ./hsv!out ./out-1!in
+    ~ ./sprite!out ./background!background
+    ~ ./scaleX!val ./custom-1!val
+    ~ ./custom-1!out ./background!scale-x
+    ~ ./scaleX1!val ./custom-2!val
+    ~ ./custom-2!out ./background!scale-y
+    ~ ./rot1!val ./multiply-2!in
+    ~ ./multiply-2!out ./xform!rotate
+  }
+  @ ./composite-1 video:composite {
+    #%graph.x 605
+    #%graph.y 108
+    .mode Difference
+    .force-alpha true
+  }
+  @ ./BG02 core:container {
+    #%graph.x 421
+    #%graph.y 255
+    #%praxis.version 4.2.0
+    @ ./background video:gl:p2d {
+      #%graph.x 425
+      #%graph.y 337
+      .code "
+
+    @P(1) PImage background;
+    @P(2) float scrollX;
+    @P(3) float scrollY;
+    
+    @Override
+    public void setup() \{
+        find(processing.core.PGraphics.class).ifPresent(pg-> \{
+            pg.hint(pg.DISABLE_TEXTURE_MIPMAPS);
+            //((PGraphicsOpenGL) pg).textureSampling(2);
+        \});
+    \}
+
+    @Override
+    public void draw() \{
+       
+        beginShape();
+        textureWrap(REPEAT);
+
+        if(background != null)
+            texture(background);
+        vertex(0, 0, scrollX * background.width, scrollY * background.height);
+        vertex(width, 0, width + scrollX * background.width, scrollY * background.height);
+        vertex(width, height, width  + scrollX * background.width, height + scrollY * background.height);
+        vertex(0, height, scrollX * background.width, height + scrollY * background.height);
+        endShape();
+    \}
+"
+      .background [file "resources/Sprites/doodles/doodle11.png"]
+      .scroll-x 0.5359063148498535
+      .scroll-y -0.453000009059906
+    }
+    @ ./backX core:custom {
+      #%graph.x 269
+      #%graph.y 352
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate .3
+      .osc-type Triangle
+    }
+    @ ./backY core:custom {
+      #%graph.x 269
+      #%graph.y 472
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate -1
+      .osc-type Triangle
+    }
+    @ ./hsv video:gl:p2d {
+      #%graph.x 850
+      #%graph.y 418
+      .code "
+
+    @P(1) @Type.Number(min=0, max=360, def=0) double hue;
+    @P(2) @Type.Number(min=0, max=2, def=1) double saturation;
+    @P(3) @Type.Number(min=0, max=2, def=1) double value;
+    
+    void updateUniforms() \{
+         shader.set(\"hue\", hue);
+         shader.set(\"saturation\", saturation);
+         shader.set(\"value\", value);
+    \}
+
+    
+    // BOILERPLATE BELOW
+    @In(0)
+    PImage in;
+    @P(0)
+    @Type.String(mime = GLSL_FRAGMENT_MIME, template = DEFAULT_FRAGMENT_SHADER)
+    @OnChange(\"updateShader\")
+    @Config.Port(false)
+    String fragment;
+
+    PShader shader;
+
+    @Override
+    public void setup() \{
+        updateShader();
+    \}
+
+    @Override
+    public void draw() \{
+        if (shader == null) \{
+            shader = createShader(DEFAULT_VERTEX_SHADER,
+                    fragment.isEmpty() ? DEFAULT_FRAGMENT_SHADER : fragment);
+        \}
+        shader(shader);
+        updateUniforms();
+        image(in, 0, 0);
+        resetShader();
+    \}
+
+    void updateShader() \{
+        shader = null;
+    \}
+
+"
+      .fragment "// https://gamedev.stackexchange.com/a/59808
+uniform sampler2D texture;
+
+uniform vec2 texOffset;
+
+uniform float hue;
+uniform float saturation;
+uniform float value;
+
+varying vec4 vertColor;
+varying vec4 vertTexCoord;
+
+vec3 rgb2hsv(vec3 c) \{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+\}
+
+vec3 hsv2rgb(vec3 c) \{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+\}
+
+void main() \{
+    vec4 textureColor = texture2D(texture, vertTexCoord.st) * vertColor;
+    vec3 fragRGB = textureColor.rgb;
+    vec3 fragHSV = rgb2hsv(fragRGB).xyz;
+    fragHSV.x += hue / 360.0;
+    fragHSV.y *= saturation;
+    fragHSV.z *= value;
+    fragRGB = hsv2rgb(fragHSV);
+    gl_FragColor = vec4(fragRGB, textureColor.a);
+\}"
+      .hue 304.3083317640415
+    }
+    @ ./hue core:custom {
+      #%graph.x 482
+      #%graph.y 555
+      .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+      .rate .1
+      .time-offset 90
+      .osc-type Triangle
+    }
+    @ ./multiply-1 core:math:multiply {
+      #%graph.x 629
+      #%graph.y 597
+      .value 360
+    }
+    @ ./xform video:custom {
+      #%graph.x 671
+      #%graph.y 325
+      .code "
+
+    @In(1)
+    PImage in;
+    @P(1)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_x;
+    @P(2)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_y;
+    @P(3)
+    @Type.Number(min = -180, max = 180, def = 0)
+    double rotate;
+    @P(4)
+    @Type.Number(min = 0, max = 2, def = 1)
+    double scale;
+
+    @Override
+    public void draw() \{
+        double w2 = width / 2;
+        double h2 = height / 2;
+        translate(
+                map(translate_x, 0, 1, -w2, width + w2),
+                map(translate_y, 0, 1, -h2, height + h2)
+        );
+        rotate(radians(rotate));
+        scale(scale);
+        image(in, -w2, -h2);
+    \}
+"
+      .scale 2
+    }
+    @ ./out-1 video:container:out {
+      #%graph.x 1039
+      #%graph.y 460
+    }
+    @ ./sprite core:container:in {
+      #%graph.x 79
+      #%graph.y 192
+    }
+    ~ ./backX!val ./background!scroll-x
+    ~ ./backY!val ./background!scroll-y
+    ~ ./hue!val ./multiply-1!in
+    ~ ./multiply-1!out ./hsv!hue
+    ~ ./background!out ./xform!in
+    ~ ./xform!out ./hsv!in
+    ~ ./hsv!out ./out-1!in
+    ~ ./sprite!out ./background!background
+  }
+  @ ./random-1 core:array:random {
+    #%graph.x 101
+    #%graph.y 108
+    .values [array "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.aseprite" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle02.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle03.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle04.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle05.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle06.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle07.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle08.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle09.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle10.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle11.png"]
+  }
+  @ ./random-2 core:array:random {
+    #%graph.x 101
+    #%graph.y 241
+    .values [array "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.aseprite" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle02.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle03.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle04.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle05.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle06.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle07.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle08.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle09.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle10.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle11.png"]
+  }
+  @ ./timer-1 core:timing:timer {
+    #%graph.x -67
+    #%graph.y 187
+  }
+  @ ./custom-1 video:custom {
+    #%graph.x 626
+    #%graph.y 25
+    .code "
+
+    @Override
+    public void setup() \{
+
+    \}
+    
+    @Override
+    public void draw() \{
+        background((sin(millis() / 1000.0) + 1) * 127);
+    \}
+    
+"
+  }
+  @ ./composite-2 video:composite {
+    #%graph.x 807
+    #%graph.y 79
+    .mode Difference
+    .force-alpha true
+  }
+  @ ./cube video:gl:p3d {
+    #%graph.x 583
+    #%graph.y 336
+    .code "
+
+    @In(1) PImage tex;
+    @Inject Property rotX, rotY, rotZ;
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        camera(0, 0, -110, 0, 0, 0, 0, 1, 0);
+        
+        fill(255);
+        //noStroke();
+        
+        if(!rotX.isAnimating())
+            rotX.set(0).to(-TWO_PI).in(5);
+        if(!rotY.isAnimating())
+            rotY.set(0).to(-TWO_PI).in(8);
+        
+        beginShape(QUADS);
+        
+        if(tex != null) \{
+            textureWrap(REPEAT);
+            texture(tex);
+        
+            noStroke();
+
+            scale(30);
+            rotateX(d(rotX));
+            rotateY(d(rotY));
+            //front
+            vertex(-1, 1, -1, 0, 0);
+            vertex(-1, -1, -1, 0, tex.height);
+            vertex(1, -1, -1, tex.width, tex.height);
+            vertex(1, 1, -1, tex.width, 0);
+
+            //back
+            vertex(-1, 1, 1, 0, 0);
+            vertex(-1, -1, 1, 0, tex.height);
+            vertex(1, -1, 1, tex.width, tex.height);
+            vertex(1, 1, 1, tex.width, 0);
+
+            //left
+            vertex(-1, 1, 1, 0, 0);
+            vertex(-1, -1, 1, 0, tex.height);
+            vertex(-1, -1, -1, tex.width, tex.height);
+            vertex(-1, 1, -1, tex.width, 0);
+
+            //right
+            vertex(1, 1, -1, 0, 0);
+            vertex(1, -1, -1, 0, tex.height);
+            vertex(1, -1, 1, tex.width, tex.height);
+            vertex(1, 1, 1, tex.width, 0);
+
+            //bottom
+            vertex(-1, -1, -1, 0, 0);
+            vertex(-1, -1, 1, 0, tex.height);
+            vertex(1, -1, 1, tex.width, tex.height);
+            vertex(1, -1, -1, tex.width, 0);
+
+            //top
+            vertex(-1, 1, 1, 0, 0);
+            vertex(-1, 1, -1, 0, tex.height);
+            vertex(1, 1, -1, tex.width, tex.height);
+            vertex(1, 1, 1, tex.width, 0);
+        \}
+        endShape();
+    \}
+"
+  }
+  @ ./still-1 video:still {
+    #%graph.x 408
+    #%graph.y 359
+    .image [file "resources/Sprites/doodles/doodle11.png"]
+  }
+  @ ./random-3 core:array:random {
+    #%graph.x 183
+    #%graph.y 389
+    .values [array "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.aseprite" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle02.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle03.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle04.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle05.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle06.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle07.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle08.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle09.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle10.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle11.png"]
+  }
+  @ ./timer-2 core:timing:timer {
+    #%graph.x -6
+    #%graph.y 454
+    .period .1
+  }
+  @ ./composite-3 video:composite {
+    #%graph.x 1037
+    #%graph.y 133
+    .mode BitXor
+    .force-alpha true
+  }
+  @ ./xfader-1 video:xfader {
+    #%graph.x 1236
+    #%graph.y 174
+  }
+  @ ./xform video:custom {
+    #%graph.x 751
+    #%graph.y 359
+    .code "
+
+    @In(1)
+    PImage in;
+    @P(1)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_x;
+    @P(2)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_y;
+    @P(3)
+    @Type.Number(min = -180, max = 180, def = 0)
+    double rotate;
+    @P(4)
+    @Type.Number(min = 0, max = 2, def = 1)
+    double scale;
+
+    @Override
+    public void draw() \{
+        double w2 = width / 2;
+        double h2 = height / 2;
+        translate(
+                map(translate_x, 0, 1, -w2, width + w2),
+                map(translate_y, 0, 1, -h2, height + h2)
+        );
+        rotate(radians(rotate));
+        scale(scale);
+        image(in, -w2, -h2);
+    \}
+"
+    .scale 1.4469603300094604
+  }
+  @ ./xfader-2 video:xfader {
+    #%graph.x 937
+    #%graph.y 311
+    .mix 1.0
+  }
+  @ ./osc core:custom {
+    #%graph.x 555
+    #%graph.y 484
+    .code "
+
+    // Oscillation curve labels
+    final String SIN = \"Sine\";
+    final String COS = \"Cosine\";
+    final String TAN = \"Tangent\";
+    final String SQUARE = \"Square\";
+    final String TRI = \"Triangle\";
+    final String SAW = \"Saw\";
+    
+    @Out(1) Output val;
+    
+    @P(1) float rate;
+    @P(2) float timeOffset;
+    @P(3) @Type.String(allowed=\{SIN, COS, TAN, TRI\}) @Config.Port(false)
+            String oscType;
+    double value, time;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        time = millis()/1000.0 + timeOffset;
+        switch(oscType)
+        \{
+            case SIN:
+                value = (sin(time * rate) + 1)/2;
+                break;
+            case COS:
+                value = (cos(time * rate) + 1)/2;
+                break;
+            case TAN:
+                value = (tan(time * rate) + 1)/2;
+                break;
+            case TRI:
+                value = (time * rate) % 1.0;
+        \}
+        val.send(value);
+    \}
+    
+"
+    .rate 1
+  }
+  @ ./custom-2 core:custom {
+    #%graph.x 721
+    #%graph.y 590
+    .code "
+
+    @P(1) float val;
+    @Out(1) Output out;
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        out.send((val + 1) * 0.8f);
+    \}
+    
+"
+    .val 0.8087003827095032
+  }
+  ~ ./random-1!out ./BG01!sprite
+  ~ ./random-2!out ./BG02!sprite
+  ~ ./timer-1!out ./random-1!trigger
+  ~ ./timer-1!out ./random-2!trigger
+  ~ ./composite-1!out ./composite-2!src
+  ~ ./custom-1!out ./composite-2!in
+  ~ ./BG02!out-1 ./composite-1!in
+  ~ ./BG01!out-1 ./composite-1!src
+  ~ ./still-1!out ./cube!tex
+  ~ ./timer-2!out ./random-3!trigger
+  ~ ./random-3!out ./still-1!image
+  ~ ./composite-2!out ./composite-3!in
+  ~ ./xfader-1!out ./screen!in
+  ~ ./composite-3!out ./xfader-1!in-1
+  ~ ./cube!out ./xform!in
+  ~ ./xfader-2!out ./composite-3!src
+  ~ ./xform!out ./xfader-2!in-2
+  ~ ./osc!val ./custom-2!val
+  ~ ./custom-2!out ./xform!scale
+}
