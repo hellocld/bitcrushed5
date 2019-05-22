@@ -9,14 +9,11 @@
     #%graph.x 1381
     #%graph.y 397
     .device 2
-    .full-screen true
     .always-on-top true
-    .undecorated true
-    .show-cursor true
   }
   @ ./feedback video:custom {
-    #%graph.x 801
-    #%graph.y 354
+    #%graph.x 686
+    #%graph.y 383
     .code "
 
     @In(1) PImage in;
@@ -84,12 +81,12 @@
     \}
 "
     .background [file "resources/Sprites/danimal-metal-tile.png"]
-    .scroll-x -0.5274732112884521
-    .scroll-y -0.7197499871253967
+    .scroll-x -0.4182075262069702
+    .scroll-y -0.9242500066757202
   }
   @ ./composite-1 video:composite {
-    #%graph.x 1094
-    #%graph.y 276
+    #%graph.x 927
+    #%graph.y 280
     .mode BitXor
     .force-alpha true
   }
@@ -177,9 +174,9 @@
         
     \}
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
-jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
-dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
+RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
+FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
       .scale 30
     }
     @ ./mirror video:gl:p2d {
@@ -290,7 +287,7 @@ dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
     
 "
       .thickness 3
-      .randomness 24
+      .randomness 1
     }
     @ ./xform video:custom {
       #%graph.x 501
@@ -355,9 +352,9 @@ dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
     \}
     
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
-jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
-dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
+RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
+FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
       .channel 1
       .trigger-val 3
     }
@@ -588,8 +585,8 @@ dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
     \}
 "
       .background [file "resources/Sprites/danimal-metal-tile.png"]
-      .scroll-x -0.5274732112884521
-      .scroll-y -0.7197499871253967
+      .scroll-x -0.4182075262069702
+      .scroll-y -0.5576037764549255
     }
     @ ./backX core:custom {
       #%graph.x 250
@@ -690,7 +687,7 @@ dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
     \}
     
 "
-      .rate -.25
+      .rate -.8
       .osc-type Triangle
     }
     @ ./colourbalance1 video:custom {
@@ -717,9 +714,9 @@ dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
         rect(0, 0, width, height);
     \}
 "
-      .red 0.7021681666374207
-      .green 0.8496831655502319
-      .blue 0.6130239963531494
+      .red 0.7165120840072632
+      .green 0.5250515937805176
+      .blue 0.7877302169799805
     }
     @ ./out-1 video:container:out {
       #%graph.x 1307
@@ -752,9 +749,9 @@ dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
     \}
     
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
-jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
-dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
+RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
+FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
       .scale 1
     }
     @ ./hsv video:gl:p2d {
@@ -879,11 +876,47 @@ void main() \{
     \}
     
 "
-    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQR/0cT++hqhABzyaP8uIOj+aiJY/NMIIPz/eFj8g
-jWA+7fbdPxUUZj7dNl4+40egPtNTyj6wJx8+pDn7PnXulz6A0Qc+OA9rPcyFoz3Kjak9gcrfPTrQ
-dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
+    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
+RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
+FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     .channel 4
     .trigger-val 1.6
+  }
+  @ ./xform video:custom {
+    #%graph.x 686
+    #%graph.y 208
+    .code "
+
+    @In(1)
+    PImage in;
+    @P(1)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_x;
+    @P(2)
+    @Type.Number(min = 0, max = 1, def = 0.5)
+    double translate_y;
+    @P(3)
+    @Type.Number(min = -180, max = 180, def = 0)
+    double rotate;
+    @P(4)
+    @Type.Number(min = 0, max = 2, def = 1)
+    double scale;
+
+    @Override
+    public void draw() \{
+        double w2 = width / 2;
+        double h2 = height / 2;
+        translate(
+                map(translate_x, 0, 1, -w2, width + w2),
+                map(translate_y, 0, 1, -h2, height + h2)
+        );
+        rotate(radians(rotate));
+        scale(scale);
+        image(in, -w2, -h2);
+    \}
+"
+    .rotate -17.419354838709694
+    .scale 1.2741935483870968
   }
   ~ ./feedback!out ./composite-1!src
   ~ ./backX!val ./background!scroll-x
@@ -894,8 +927,9 @@ dT0oiMg9IW4TPRsAjj0XA+Q9E1X2PRBaSz0OKss9DYabPQy+FT0L3pw="
   ~ ./composite-2!out ./screen!in
   ~ ./colourbalance!out ./feedback!in
   ~ ./background!out ./colourbalance1!in
-  ~ ./bg!out-1 ./composite-1!in
   ~ ./fftTrigger!out ./crosshair!trigger
   ~ ./main_gfx!out-1 ./feedback!in
   ~ ./foreground!out-1 ./feedback!in
+  ~ ./bg!out-1 ./xform!in
+  ~ ./xform!out ./composite-1!in
 }
