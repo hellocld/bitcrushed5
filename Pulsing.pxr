@@ -12,14 +12,14 @@
     .show-cursor true
   }
   @ ./player-1 video:player {
-    #%graph.x 20
-    #%graph.y 35
-    .video file:/C:/Users/Chris%20Langford/Desktop/GoPro%20Viz/Gopr6065-1.m4v
+    #%graph.x 21
+    #%graph.y -3
+    .video file:/media/chris/drive1/Video/JamKeynoteXIV.mp4
     .rate 2
   }
   @ ./GBCamerr core:container {
-    #%graph.x 332
-    #%graph.y 57
+    #%graph.x 496
+    #%graph.y 33
     #%praxis.version 4.2.0
     @ ./snapshot-1 video:snapshot {
       #%graph.x 580
@@ -28,7 +28,7 @@
     @ ./timer-1 core:timing:timer {
       #%graph.x 360
       #%graph.y 314
-      .period 0.125
+      .period .1
     }
     @ ./pixelate video:gl:p2d {
       #%graph.x 336
@@ -75,50 +75,9 @@
     ~ ./snapshot-1!out ./out-1!in
     ~ ./in-1!out ./pixelate!src
   }
-  @ ./xform video:custom {
-    #%graph.x 358
-    #%graph.y 248
-    .code "
-
-    @In(1)
-    PImage in;
-    @P(1)
-    @Type.Number(min = 0, max = 1, def = 0.5)
-    double translate_x;
-    @P(2)
-    @Type.Number(min = 0, max = 1, def = 0.5)
-    double translate_y;
-    @P(3)
-    @Type.Number(min = -180, max = 180, def = 0)
-    double rotate;
-    @P(4)
-    @Type.Number(min = 0, max = 2, def = 1)
-    double scale;
-
-    @Override
-    public void draw() \{
-        double w2 = width / 2;
-        double h2 = height / 2;
-        translate(
-                map(translate_x, 0, 1, -w2, width + w2),
-                map(translate_y, 0, 1, -h2, height + h2)
-        );
-        rotate(radians(rotate));
-        scale(scale);
-        image(in, -w2, -h2);
-    \}
-"
-    .scale 0.8709677419354839
-  }
-  @ ./composite-1 video:composite {
-    #%graph.x 814
-    #%graph.y 148
-    .mode Difference
-    .force-alpha true
-  }
   @ ./hsv video:gl:p2d {
-    #%graph.x 586
-    #%graph.y 309
+    #%graph.x 718
+    #%graph.y 172
     .code "
 
     @P(1) @Type.Number(min=0, max=360, def=0) double hue;
@@ -203,14 +162,276 @@ void main() \{
     fragRGB = hsv2rgb(fragHSV);
     gl_FragColor = vec4(fragRGB, textureColor.a);
 \}"
-    .hue 293.2258064516129
+    .hue 224.22455022438402
     .saturation 1.4838709677419355
     .value 1.3548387096774193
   }
-  ~ ./player-1!out ./GBCamerr!in-1
-  ~ ./player-1!out ./xform!in
-  ~ ./GBCamerr!out-1 ./composite-1!in
-  ~ ./hsv!out ./composite-1!src
+  @ ./random-1 core:math:random {
+    #%graph.x 517
+    #%graph.y 197
+    .range 360
+  }
+  @ ./cuberot video:gl:p3d {
+    #%graph.x 249
+    #%graph.y 339
+    .code "
+
+    @Inject Property s;
+    @T(1) void scale()
+    \{
+        if(!s.isAnimating())
+                s.set(100).to(50).in(0.2);
+    \};
+    
+    
+    
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        noStroke();
+        fill(255);
+        camera(0, 0, -100, 0, 0, 0, 0, 1, 0);
+        directionalLight(255, 255, 255, 1, 0, 1);
+        rotateX(millis() / 1000.0);
+        rotateY(millis() / 2000.0);
+        box(d(s));
+    \}
+"
+  }
+  @ ./composite-1 video:composite {
+    #%graph.x 284
+    #%graph.y 120
+    .mode Multiply
+    .force-alpha true
+  }
+  @ ./GBCamerr1 core:container {
+    #%graph.x 443
+    #%graph.y 520
+    #%praxis.version 4.2.0
+    @ ./snapshot-1 video:snapshot {
+      #%graph.x 580
+      #%graph.y 287
+    }
+    @ ./timer-1 core:timing:timer {
+      #%graph.x 360
+      #%graph.y 314
+      .period .1
+    }
+    @ ./pixelate video:gl:p2d {
+      #%graph.x 336
+      #%graph.y 179
+      .code "
+
+    @In(1) PImage src;
+    @P(2) @Type.Integer(min=1, max=64, def=32) int pix;
+    @Override
+    public void setup() \{
+    \}
+
+    @Override
+    public void draw() \{
+        if(src != null) \{
+            noStroke();
+            for(int y = 0; y < src.height; y += pix) \{
+                for(int x = 0; x < src.width; x += pix) \{
+                    beginShape();
+                    texture(src);
+                    tint(0, 255, 0);
+                    vertex(x, y, x, y);
+                    vertex(x + pix, y, x, y);
+                    vertex(x + pix, y + pix, x, y);
+                    vertex(x, y + pix, x, y);
+                    endShape();
+                \}
+            \}
+        \}
+    \}
+"
+      .pix 20
+    }
+    @ ./in-1 video:container:in {
+      #%graph.x 67
+      #%graph.y 161
+    }
+    @ ./out-1 video:container:out {
+      #%graph.x 898
+      #%graph.y 245
+    }
+    ~ ./timer-1!out ./snapshot-1!trigger
+    ~ ./pixelate!out ./snapshot-1!in
+    ~ ./snapshot-1!out ./out-1!in
+    ~ ./in-1!out ./pixelate!src
+  }
+  @ ./hsv1 video:gl:p2d {
+    #%graph.x 644
+    #%graph.y 607
+    .code "
+
+    @P(1) @Type.Number(min=0, max=360, def=0) double hue;
+    @P(2) @Type.Number(min=0, max=2, def=1) double saturation;
+    @P(3) @Type.Number(min=0, max=2, def=1) double value;
+    
+    void updateUniforms() \{
+         shader.set(\"hue\", hue);
+         shader.set(\"saturation\", saturation);
+         shader.set(\"value\", value);
+    \}
+
+    
+    // BOILERPLATE BELOW
+    @In(0)
+    PImage in;
+    @P(0)
+    @Type.String(mime = GLSL_FRAGMENT_MIME, template = DEFAULT_FRAGMENT_SHADER)
+    @OnChange(\"updateShader\")
+    @Config.Port(false)
+    String fragment;
+
+    PShader shader;
+
+    @Override
+    public void setup() \{
+        updateShader();
+    \}
+
+    @Override
+    public void draw() \{
+        if (shader == null) \{
+            shader = createShader(DEFAULT_VERTEX_SHADER,
+                    fragment.isEmpty() ? DEFAULT_FRAGMENT_SHADER : fragment);
+        \}
+        shader(shader);
+        updateUniforms();
+        image(in, 0, 0);
+        resetShader();
+    \}
+
+    void updateShader() \{
+        shader = null;
+    \}
+
+"
+    .fragment "// https://gamedev.stackexchange.com/a/59808
+uniform sampler2D texture;
+
+uniform vec2 texOffset;
+
+uniform float hue;
+uniform float saturation;
+uniform float value;
+
+varying vec4 vertColor;
+varying vec4 vertTexCoord;
+
+vec3 rgb2hsv(vec3 c) \{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+\}
+
+vec3 hsv2rgb(vec3 c) \{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+\}
+
+void main() \{
+    vec4 textureColor = texture2D(texture, vertTexCoord.st) * vertColor;
+    vec3 fragRGB = textureColor.rgb;
+    vec3 fragHSV = rgb2hsv(fragRGB).xyz;
+    fragHSV.x += hue / 360.0;
+    fragHSV.y *= saturation;
+    fragHSV.z *= value;
+    fragRGB = hsv2rgb(fragHSV);
+    gl_FragColor = vec4(fragRGB, textureColor.a);
+\}"
+    .hue 252.84912093722863
+    .saturation 1.4838709677419355
+    .value 1.3548387096774193
+  }
+  @ ./random-2 core:math:random {
+    #%graph.x 443
+    #%graph.y 632
+    .range 360
+  }
+  @ ./fftGet core:custom {
+    #%graph.x 10
+    #%graph.y 520
+    .code "
+
+    @P(0) float\[\] fftData;
+    
+    @P(1) int channel;
+    @Out(1) Output data;
+    @Out(2) Output channels;
+    
+    @Override
+    public void init() \{
+        
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fftData.length > 0)
+            data.send(fftData\[constrain(channel, 0, fftData.length)\]);
+        log(INFO, \"Channels: \" + fftData.length);
+    \}
+    
+"
+    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgPq/YND0ffIA9MOlaPSMrRj0dwIo9JcvyPN1IQjyG
+SGw8g5nCPE2CcTxwoFs8s5zFPQJ+0D2gdtk9A/AqPNgc0z0KaDg9Sd4QPbcfmzyAJEM8zYzHPJcW
+vDz2e+Q9bn5mPQfKqDxTUlc73rkIO49LqztthHU7VtDzO1EomTtFoVY="
+  }
+  @ ./fftTrigger core:custom {
+    #%graph.x 211
+    #%graph.y 507
+    .code "
+
+    @P(1) float trig;
+    @P(2) float fft;
+    @Out(1) Output trigger;
+    
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fft > trig)
+            trigger.send(true);
+    \}
+    
+"
+    .trig 5.0
+    .fft 0.34344637393951416
+  }
+  @ ./randVid core:array:random {
+    #%graph.x -305
+    #%graph.y 61
+    .values [array "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.aseprite" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle02.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle03.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle04.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle05.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle06.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle07.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle08.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle09.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle10.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle11.png"]
+  }
   ~ ./GBCamerr!out-1 ./hsv!in
+  ~ ./random-1!out ./hsv!hue
   ~ ./hsv!out ./screen!in
+  ~ ./player-1!out ./composite-1!in
+  ~ ./composite-1!out ./GBCamerr!in-1
+  ~ ./random-2!out ./hsv1!hue
+  ~ ./GBCamerr1!out-1 ./hsv1!in
+  ~ ./hsv1!out ./screen!in
+  ~ ./cuberot!out ./GBCamerr1!in-1
+  ~ ./fftGet!data ./fftTrigger!fft
+  ~ ./fftTrigger!trigger ./random-2!trigger
+  ~ ./fftTrigger!trigger ./cuberot!scale
+  ~ ./fftTrigger!trigger ./random-1!trigger
+  ~ ./randVid!out ./player-1!video
 }

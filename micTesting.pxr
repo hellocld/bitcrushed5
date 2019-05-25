@@ -2,8 +2,8 @@
   #%autostart true
   #%praxis.version 4.2.0
   @ ./output audio:output {
-    #%graph.x 672
-    #%graph.y 189
+    #%graph.x 465
+    #%graph.y 164
   }
   @ ./input-1 audio:input {
     #%graph.x 11
@@ -232,14 +232,19 @@ import java.io.*;
     .address /Danimal/fftTrigger.fft-data
   }
   @ ./sendScanKick core:routing:send {
-    #%graph.x 897
-    #%graph.y 129
+    #%graph.x 796
+    #%graph.y 117
     .address /Danimal/main_gfx/fftTrigger.fft-data
   }
   @ ./gain-1 audio:gain {
     #%graph.x 243
     #%graph.y -53
     .level 0.9769112376319998
+  }
+  @ ./sendPulsing core:routing:send {
+    #%graph.x 840
+    #%graph.y 189
+    .address /Danimal/main_gfx/fftTrigger.fft-data
   }
   ~ ./input-1!out-2 ./output!in-2
   ~ ./fft!power-data ./send-1!in
@@ -249,4 +254,5 @@ import java.io.*;
   ~ ./fft!power-data ./sendScanKick!in
   ~ ./input-1!out-1 ./gain-1!in
   ~ ./gain-1!out ./fft!in
+  ~ ./fft!power-data ./sendPulsing!in
 }
