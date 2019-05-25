@@ -48,15 +48,15 @@
     \}
     
 "
-    .frame-w 789.0
-    .frame-h 607.0
-    .offset-x -2.3999999999999986
-    .offset-y 2.799999999999997
+    .frame-w 750.0
+    .frame-h 550.0
+    .offset-x 0.3999999999999986
+    .offset-y -2.3999999999999986
     .opacity 0.8
   }
   @ ./background video:gl:p2d {
-    #%graph.x 646
-    #%graph.y 56
+    #%graph.x 589
+    #%graph.y 29
     .code "
 
     @P(1) PImage background;
@@ -83,8 +83,8 @@
     \}
 "
     .background [file "resources/Sprites/danimal-metal-tile.png"]
-    .scroll-x -0.9364010691642761
-    .scroll-y -0.22349999845027924
+    .scroll-x -0.8964025378227234
+    .scroll-y -0.6234999895095825
   }
   @ ./composite-1 video:composite {
     #%graph.x 927
@@ -176,9 +176,9 @@
         
     \}
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgPQteqj0+CEo9HNEIPRTSsD0uirs9FjPePR/86T0E
+xUY9DC90PMyK5z0LXvI8v4r1PPgbiT0Exzw9A1wjPM5gFDzlalk8/3XePKjlWj0AGp08ottkPMPV
+0TzNXXo8pkHCPMylQDy0GPo8vb/iPLBOMDzFz6U8rUPtPGhccTvckTM="
       .scale 30
     }
     @ ./mirror video:gl:p2d {
@@ -289,6 +289,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
     
 "
       .thickness 3
+      .randomness 1
     }
     @ ./xform video:custom {
       #%graph.x 501
@@ -353,9 +354,9 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
     \}
     
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgPQteqj0+CEo9HNEIPRTSsD0uirs9FjPePR/86T0E
+xUY9DC90PMyK5z0LXvI8v4r1PPgbiT0Exzw9A1wjPM5gFDzlalk8/3XePKjlWj0AGp08ottkPMPV
+0TzNXXo8pkHCPMylQDy0GPo8vb/iPLBOMDzFz6U8rUPtPGhccTvckTM="
       .channel 1
       .trigger-val 3
     }
@@ -586,8 +587,8 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
     \}
 "
       .background [file "resources/Sprites/danimal-metal-tile.png"]
-      .scroll-x -0.9364010691642761
-      .scroll-y -0.9152005314826965
+      .scroll-x -0.8964025378227234
+      .scroll-y -0.19520126283168793
     }
     @ ./backX core:custom {
       #%graph.x 250
@@ -715,9 +716,9 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
         rect(0, 0, width, height);
     \}
 "
-      .red 0.0
-      .green 0.0
-      .blue 0.0
+      .red 0.9171480536460876
+      .green 0.9311587810516357
+      .blue 0.9676089286804199
     }
     @ ./out-1 video:container:out {
       #%graph.x 1307
@@ -750,9 +751,9 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
     \}
     
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgPQteqj0+CEo9HNEIPRTSsD0uirs9FjPePR/86T0E
+xUY9DC90PMyK5z0LXvI8v4r1PPgbiT0Exzw9A1wjPM5gFDzlalk8/3XePKjlWj0AGp08ottkPMPV
+0TzNXXo8pkHCPMylQDy0GPo8vb/iPLBOMDzFz6U8rUPtPGhccTvckTM="
       .scale 1
     }
     @ ./hsv video:gl:p2d {
@@ -877,9 +878,9 @@ void main() \{
     \}
     
 "
-    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgPQteqj0+CEo9HNEIPRTSsD0uirs9FjPePR/86T0E
+xUY9DC90PMyK5z0LXvI8v4r1PPgbiT0Exzw9A1wjPM5gFDzlalk8/3XePKjlWj0AGp08ottkPMPV
+0TzNXXo8pkHCPMylQDy0GPo8vb/iPLBOMDzFz6U8rUPtPGhccTvckTM="
     .channel 4
     .trigger-val 1.6
   }
@@ -917,22 +918,22 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
     \}
 "
     .rotate -17.419354838709694
-    .scale 1.2741935483870968
+    .scale 1.435483870967742
   }
   @ ./HeadFader video:xfader {
     #%graph.x 320
     #%graph.y 397
-    .mix 0.5
+    .mix 1.0
   }
   @ ./BarFader video:xfader {
     #%graph.x 320
     #%graph.y 605
-    .mix 0.91
+    .mix 0.622
   }
   @ ./CrosshairFader video:xfader {
     #%graph.x 577
     #%graph.y 730
-    .mix 0.506
+    .mix 0.446
   }
   ~ ./feedback!out ./composite-1!src
   ~ ./backX!val ./background!scroll-x
