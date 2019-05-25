@@ -12,8 +12,8 @@
     .always-on-top true
   }
   @ ./feedback video:custom {
-    #%graph.x 686
-    #%graph.y 383
+    #%graph.x 577
+    #%graph.y 455
     .code "
 
     @In(1) PImage in;
@@ -48,8 +48,10 @@
     \}
     
 "
-    .frame-w 790
-    .frame-h 620
+    .frame-w 773.0
+    .frame-h 650.0
+    .offset-x -2.3999999999999986
+    .offset-y 1.6000000000000014
     .opacity 0.8
   }
   @ ./background video:gl:p2d {
@@ -81,8 +83,8 @@
     \}
 "
     .background [file "resources/Sprites/danimal-metal-tile.png"]
-    .scroll-x -0.4182075262069702
-    .scroll-y -0.9242500066757202
+    .scroll-x -0.8786290287971497
+    .scroll-y -0.5327500104904175
   }
   @ ./composite-1 video:composite {
     #%graph.x 927
@@ -91,8 +93,8 @@
     .force-alpha true
   }
   @ ./crosshair video:gl:p2d {
-    #%graph.x 587
-    #%graph.y 795
+    #%graph.x 336
+    #%graph.y 781
     .code "
 
     @P(1) PImage tex;
@@ -135,8 +137,8 @@
     .size 600
   }
   @ ./foreground core:container {
-    #%graph.x 230
-    #%graph.y 637
+    #%graph.x 85
+    #%graph.y 605
     #%praxis.version 4.2.0
     @ ./waveform video:gl:p2d {
       #%graph.x 328
@@ -174,9 +176,9 @@
         
     \}
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
-RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
-FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
       .scale 30
     }
     @ ./mirror video:gl:p2d {
@@ -210,8 +212,8 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     ~ ./mirror!out ./out-1!in
   }
   @ ./main_gfx core:container {
-    #%graph.x 215
-    #%graph.y 383
+    #%graph.x 127
+    #%graph.y 415
     #%praxis.version 4.2.0
     @ ./p3d-1 video:gl:p3d {
       #%graph.x 316
@@ -287,7 +289,6 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     
 "
       .thickness 3
-      .randomness 1
     }
     @ ./xform video:custom {
       #%graph.x 501
@@ -352,9 +353,9 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     \}
     
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
-RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
-FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
       .channel 1
       .trigger-val 3
     }
@@ -493,8 +494,8 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     .osc-type Triangle
   }
   @ ./colourbalance video:custom {
-    #%graph.x 823
-    #%graph.y 723
+    #%graph.x 840
+    #%graph.y 707
     .code "
 
     @In(1) PImage in;
@@ -520,8 +521,8 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     .blue 0.20967741935483872
   }
   @ ./composite-2 video:composite {
-    #%graph.x 1143
-    #%graph.y 570
+    #%graph.x 1150
+    #%graph.y 532
     .mode Screen
     .force-alpha true
   }
@@ -585,8 +586,8 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     \}
 "
       .background [file "resources/Sprites/danimal-metal-tile.png"]
-      .scroll-x -0.4182075262069702
-      .scroll-y -0.5576037764549255
+      .scroll-x -0.8786290287971497
+      .scroll-y -0.5048145055770874
     }
     @ ./backX core:custom {
       #%graph.x 250
@@ -714,9 +715,9 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
         rect(0, 0, width, height);
     \}
 "
-      .red 0.7165120840072632
-      .green 0.5250515937805176
-      .blue 0.7877302169799805
+      .red 0.0
+      .green 0.0
+      .blue 0.0
     }
     @ ./out-1 video:container:out {
       #%graph.x 1307
@@ -749,9 +750,9 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     \}
     
 "
-      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
-RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
-FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
+      .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
       .scale 1
     }
     @ ./hsv video:gl:p2d {
@@ -853,8 +854,8 @@ void main() \{
     ~ ./hsv!out ./out-1!in
   }
   @ ./fftTrigger core:custom {
-    #%graph.x 320
-    #%graph.y 783
+    #%graph.x 149
+    #%graph.y 755
     .code "
 
     @Out(1) Output out;
@@ -876,9 +877,9 @@ void main() \{
     \}
     
 "
-    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgQNs6vj83bVY/3WFlQAarjz/goCw/cQY+P8JEND+7
-RBE/5h6OP7loMD/dYAM/nA8FP4Vl+D8xk5o/MoX5Pu41WD6cNWA+iD7kPm89DT5AG3A9rmT4PTEh
-FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
+    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
     .channel 4
     .trigger-val 1.6
   }
@@ -918,18 +919,36 @@ FzwO2TA8BNXnO/tl6zvwm68737jaO9uqXTveAGM71Ij1O9ToMzvVCcQ="
     .rotate -17.419354838709694
     .scale 1.2741935483870968
   }
+  @ ./HeadFader video:xfader {
+    #%graph.x 320
+    #%graph.y 397
+    .mix 0.74
+  }
+  @ ./BarFader video:xfader {
+    #%graph.x 320
+    #%graph.y 605
+    .mix 0.882
+  }
+  @ ./CrosshairFader video:xfader {
+    #%graph.x 577
+    #%graph.y 730
+    .mix 0.532
+  }
   ~ ./feedback!out ./composite-1!src
   ~ ./backX!val ./background!scroll-x
   ~ ./backY!val ./background!scroll-y
-  ~ ./crosshair!out ./colourbalance!in
-  ~ ./colourbalance!out ./composite-2!src
-  ~ ./composite-1!out ./composite-2!in
   ~ ./composite-2!out ./screen!in
   ~ ./colourbalance!out ./feedback!in
   ~ ./background!out ./colourbalance1!in
   ~ ./fftTrigger!out ./crosshair!trigger
-  ~ ./main_gfx!out-1 ./feedback!in
-  ~ ./foreground!out-1 ./feedback!in
   ~ ./bg!out-1 ./xform!in
   ~ ./xform!out ./composite-1!in
+  ~ ./composite-1!out ./composite-2!in
+  ~ ./colourbalance!out ./composite-2!src
+  ~ ./HeadFader!out ./feedback!in
+  ~ ./foreground!out-1 ./BarFader!in-2
+  ~ ./main_gfx!out-1 ./HeadFader!in-2
+  ~ ./BarFader!out ./feedback!in
+  ~ ./crosshair!out ./CrosshairFader!in-2
+  ~ ./CrosshairFader!out ./colourbalance!in
 }

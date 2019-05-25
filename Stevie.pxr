@@ -6,16 +6,16 @@
   .height 600
   .fps 60.0
   @ ./screen video:output {
-    #%graph.x 1400
-    #%graph.y 282
+    #%graph.x 1522
+    #%graph.y 267
     .device 2
     .always-on-top true
     .undecorated true
     .show-cursor true
   }
   @ ./BG01 core:container {
-    #%graph.x 408
-    #%graph.y -2
+    #%graph.x 353
+    #%graph.y 75
     #%praxis.version 4.2.0
     @ ./background video:gl:p2d {
       #%graph.x 487
@@ -61,10 +61,10 @@
     \}
 "
       .background [file "resources/Sprites/doodles/doodle04.png"]
-      .scroll-x -0.07181259989738464
-      .scroll-y -0.1132500022649765
-      .scale-x 1.9856774806976318
-      .scale-y 1.6645234823226929
+      .scroll-x -0.4648006856441498
+      .scroll-y -0.2770000100135803
+      .scale-x 1.9976720809936523
+      .scale-y 1.8111815452575684
     }
     @ ./backX core:custom {
       #%graph.x 187
@@ -255,7 +255,7 @@ void main() \{
     fragRGB = hsv2rgb(fragHSV);
     gl_FragColor = vec4(fragRGB, textureColor.a);
 \}"
-      .hue 152.15414174213961
+      .hue 163.94400780737405
       .value 2.0
     }
     @ ./hue core:custom {
@@ -347,7 +347,7 @@ void main() \{
         image(in, -w2, -h2);
     \}
 "
-      .rotate 119.61422213758289
+      .rotate 146.01266499365673
       .scale 2
     }
     @ ./out-1 video:container:out {
@@ -428,7 +428,7 @@ void main() \{
     \}
     
 "
-      .val 0.9856775403022766
+      .val 0.9976720213890076
     }
     @ ./scaleX1 core:custom {
       #%graph.x 25
@@ -502,7 +502,7 @@ void main() \{
     \}
     
 "
-      .val 0.6645234823226929
+      .val 0.8111814856529236
     }
     @ ./rot1 core:custom {
       #%graph.x 367
@@ -583,8 +583,8 @@ void main() \{
     .force-alpha true
   }
   @ ./BG02 core:container {
-    #%graph.x 421
-    #%graph.y 255
+    #%graph.x 353
+    #%graph.y 208
     #%praxis.version 4.2.0
     @ ./background video:gl:p2d {
       #%graph.x 425
@@ -619,8 +619,8 @@ void main() \{
     \}
 "
       .background [file "resources/Sprites/doodles/doodle11.png"]
-      .scroll-x 0.5359063148498535
-      .scroll-y -0.453000009059906
+      .scroll-x 0.7324003577232361
+      .scroll-y -0.1080000028014183
     }
     @ ./backX core:custom {
       #%graph.x 269
@@ -811,7 +811,7 @@ void main() \{
     fragRGB = hsv2rgb(fragHSV);
     gl_FragColor = vec4(fragRGB, textureColor.a);
 \}"
-      .hue 304.3083317640415
+      .hue 327.8880638945102
     }
     @ ./hue core:custom {
       #%graph.x 482
@@ -1049,18 +1049,18 @@ void main() \{
     .period .1
   }
   @ ./composite-3 video:composite {
-    #%graph.x 1037
-    #%graph.y 133
+    #%graph.x 1083
+    #%graph.y 142
     .mode BitXor
     .force-alpha true
   }
   @ ./xfader-1 video:xfader {
-    #%graph.x 1236
-    #%graph.y 174
+    #%graph.x 1291
+    #%graph.y 187
   }
   @ ./xform video:custom {
-    #%graph.x 751
-    #%graph.y 359
+    #%graph.x 737
+    #%graph.y 341
     .code "
 
     @In(1)
@@ -1091,11 +1091,11 @@ void main() \{
         image(in, -w2, -h2);
     \}
 "
-    .scale 1.4469603300094604
+    .scale 0.9038397669792175
   }
   @ ./xfader-2 video:xfader {
-    #%graph.x 937
-    #%graph.y 311
+    #%graph.x 899
+    #%graph.y 298
     .mix 1.0
   }
   @ ./osc core:custom {
@@ -1167,7 +1167,7 @@ void main() \{
     \}
     
 "
-    .val 0.8087003827095032
+    .val 0.1297997087240219
   }
   ~ ./random-1!out ./BG01!sprite
   ~ ./random-2!out ./BG02!sprite

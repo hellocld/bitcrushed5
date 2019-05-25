@@ -15,7 +15,6 @@
     #%graph.x 54
     #%graph.y 23
     .video file:/C:/Users/Chris%20Langford/Desktop/GoPro%20Viz/Gopr6065-1.m4v
-    .position 0.519212962962038
     .rate 2
   }
   @ ./GBCamerr core:container {

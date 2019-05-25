@@ -6,8 +6,8 @@
     #%graph.y 189
   }
   @ ./input-1 audio:input {
-    #%graph.x 154
-    #%graph.y 164
+    #%graph.x 128
+    #%graph.y 139
   }
   @ ./fft audio:custom {
     #%graph.x 418

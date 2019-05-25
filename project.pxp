@@ -6,6 +6,7 @@ include [file "micTesting.pxr"]
 include [file "Danimal.pxr"]
 include [file "Stevie.pxr"]
 include [file "Pulsing.pxr"]
+include [file "gui.pxr"]
 
 # <<<RUN>>>
 include [file "config/video_autostart"]
@@ -13,3 +14,4 @@ include [file "config/micTesting_autostart"]
 include [file "config/Danimal_autostart"]
 include [file "config/Stevie_autostart"]
 include [file "config/Pulsing_autostart"]
+include [file "config/gui_autostart"]

@@ -1,0 +1,57 @@
+@ /gui root:gui {
+  #%praxis.version 4.2.0
+  @ ./panel1 gui:panel {
+    .label Danimal
+    .layout "cell 0 0"
+    @ ./v-slider1 gui:v-slider {
+      .label Bars
+      .binding /Danimal/BarFader.mix
+      .layout "cell 0 0"
+    }
+    @ ./v-slider2 gui:v-slider {
+      .label Head
+      .binding /Danimal/HeadFader.mix
+      .layout "cell 1 0"
+    }
+    @ ./v-slider3 gui:v-slider {
+      .label Cross
+      .binding /Danimal/CrosshairFader.mix
+      .layout "cell 2 0"
+    }
+    @ ./xy-pad1 gui:xy-pad {
+      .label FeedbackOff
+      .binding-x /Danimal/feedback.offset-x
+      .binding-y /Danimal/feedback.offset-y
+      .minimum-x -20
+      .minimum-y -20
+      .maximum-x 20
+      .maximum-y 20
+      .layout "cell 3 0"
+    }
+    @ ./xy-pad2 gui:xy-pad {
+      .label FeedbackScale
+      .binding-x /Danimal/feedback.frame-w
+      .binding-y /Danimal/feedback.frame-h
+      .minimum-x 750
+      .minimum-y 550
+      .maximum-x 850
+      .maximum-y 650
+      .layout "cell 4 0"
+    }
+  }
+  @ ./tabs1 gui:tabs {
+    .layout "cell 0 1"
+    @ ./panel1 gui:panel {
+      .label Danimal
+      .layout "cell 0 0"
+    }
+    @ ./panel2 gui:panel {
+      .label Stevie
+      .layout "cell 0 0"
+    }
+    @ ./panel3 gui:panel {
+      .label Pulsing
+      .layout "cell 0 0"
+    }
+  }
+}
