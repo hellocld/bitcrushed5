@@ -14,8 +14,8 @@
     .show-cursor true
   }
   @ ./BG01 core:container {
-    #%graph.x 353
-    #%graph.y 75
+    #%graph.x 277
+    #%graph.y 79
     #%praxis.version 4.2.0
     @ ./background video:gl:p2d {
       #%graph.x 487
@@ -61,10 +61,10 @@
     \}
 "
       .background [file "resources/Sprites/doodles/doodle04.png"]
-      .scroll-x -0.4648006856441498
-      .scroll-y -0.2770000100135803
-      .scale-x 1.9976720809936523
-      .scale-y 1.8111815452575684
+      .scroll-x -0.9670158624649048
+      .scroll-y -0.23624999821186066
+      .scale-x 1.080264925956726
+      .scale-y 1.4996333122253418
     }
     @ ./backX core:custom {
       #%graph.x 187
@@ -255,7 +255,7 @@ void main() \{
     fragRGB = hsv2rgb(fragHSV);
     gl_FragColor = vec4(fragRGB, textureColor.a);
 \}"
-      .hue 163.94400780737405
+      .hue 89.01017835214816
       .value 2.0
     }
     @ ./hue core:custom {
@@ -347,7 +347,7 @@ void main() \{
         image(in, -w2, -h2);
     \}
 "
-      .rotate 146.01266499365673
+      .rotate 89.93400805011785
       .scale 2
     }
     @ ./out-1 video:container:out {
@@ -428,7 +428,7 @@ void main() \{
     \}
     
 "
-      .val 0.9976720213890076
+      .val 0.08026489615440369
     }
     @ ./scaleX1 core:custom {
       #%graph.x 25
@@ -502,7 +502,7 @@ void main() \{
     \}
     
 "
-      .val 0.8111814856529236
+      .val 0.4996333718299866
     }
     @ ./rot1 core:custom {
       #%graph.x 367
@@ -579,12 +579,12 @@ void main() \{
   @ ./composite-1 video:composite {
     #%graph.x 605
     #%graph.y 108
-    .mode Difference
+    .mode BitXor
     .force-alpha true
   }
   @ ./BG02 core:container {
-    #%graph.x 353
-    #%graph.y 208
+    #%graph.x 302
+    #%graph.y 223
     #%praxis.version 4.2.0
     @ ./background video:gl:p2d {
       #%graph.x 425
@@ -619,8 +619,8 @@ void main() \{
     \}
 "
       .background [file "resources/Sprites/doodles/doodle11.png"]
-      .scroll-x 0.7324003577232361
-      .scroll-y -0.1080000028014183
+      .scroll-x 0.4835079312324524
+      .scroll-y -0.9449999928474426
     }
     @ ./backX core:custom {
       #%graph.x 269
@@ -811,7 +811,7 @@ void main() \{
     fragRGB = hsv2rgb(fragHSV);
     gl_FragColor = vec4(fragRGB, textureColor.a);
 \}"
-      .hue 327.8880638945102
+      .hue 178.0204049840586
     }
     @ ./hue core:custom {
       #%graph.x 482
@@ -937,8 +937,8 @@ void main() \{
     #%graph.y 187
   }
   @ ./custom-1 video:custom {
-    #%graph.x 626
-    #%graph.y 25
+    #%graph.x 605
+    #%graph.y 24
     .code "
 
     @Override
@@ -954,14 +954,14 @@ void main() \{
 "
   }
   @ ./composite-2 video:composite {
-    #%graph.x 807
-    #%graph.y 79
-    .mode Difference
+    #%graph.x 865
+    #%graph.y 92
+    .mode BitXor
     .force-alpha true
   }
   @ ./cube video:gl:p3d {
-    #%graph.x 583
-    #%graph.y 336
+    #%graph.x 529
+    #%graph.y 337
     .code "
 
     @In(1) PImage tex;
@@ -1034,8 +1034,8 @@ void main() \{
 "
   }
   @ ./still-1 video:still {
-    #%graph.x 408
-    #%graph.y 359
+    #%graph.x 352
+    #%graph.y 366
     .image [file "resources/Sprites/doodles/doodle11.png"]
   }
   @ ./random-3 core:array:random {
@@ -1051,7 +1051,7 @@ void main() \{
   @ ./composite-3 video:composite {
     #%graph.x 1083
     #%graph.y 142
-    .mode BitXor
+    .mode Subtract
     .force-alpha true
   }
   @ ./xfader-1 video:xfader {
@@ -1059,8 +1059,8 @@ void main() \{
     #%graph.y 187
   }
   @ ./xform video:custom {
-    #%graph.x 737
-    #%graph.y 341
+    #%graph.x 693
+    #%graph.y 337
     .code "
 
     @In(1)
@@ -1091,16 +1091,11 @@ void main() \{
         image(in, -w2, -h2);
     \}
 "
-    .scale 0.9038397669792175
-  }
-  @ ./xfader-2 video:xfader {
-    #%graph.x 899
-    #%graph.y 298
-    .mix 1.0
+    .scale 0.8486135601997375
   }
   @ ./osc core:custom {
-    #%graph.x 555
-    #%graph.y 484
+    #%graph.x 359
+    #%graph.y 700
     .code "
 
     // Oscillation curve labels
@@ -1149,8 +1144,8 @@ void main() \{
     .rate 1
   }
   @ ./custom-2 core:custom {
-    #%graph.x 721
-    #%graph.y 590
+    #%graph.x 565
+    #%graph.y 604
     .code "
 
     @P(1) float val;
@@ -1167,16 +1162,37 @@ void main() \{
     \}
     
 "
-    .val 0.1297997087240219
+    .val 0.060766901820898056
+  }
+  @ ./BgDoodle video:xfader {
+    #%graph.x 433
+    #%graph.y 37
+    #%graph.minimized true
+    .mix 0.76
+  }
+  @ ./FgDoodle video:xfader {
+    #%graph.x 433
+    #%graph.y 120
+    #%graph.minimized true
+    .mix 0.506
+  }
+  @ ./PulseFader video:xfader {
+    #%graph.x 826
+    #%graph.y 24
+    #%graph.minimized true
+    .mix 0.696
+  }
+  @ ./CubeFader video:xfader {
+    #%graph.x 846
+    #%graph.y 337
+    #%graph.minimized true
+    .mix 1.0
   }
   ~ ./random-1!out ./BG01!sprite
   ~ ./random-2!out ./BG02!sprite
   ~ ./timer-1!out ./random-1!trigger
   ~ ./timer-1!out ./random-2!trigger
   ~ ./composite-1!out ./composite-2!src
-  ~ ./custom-1!out ./composite-2!in
-  ~ ./BG02!out-1 ./composite-1!in
-  ~ ./BG01!out-1 ./composite-1!src
   ~ ./still-1!out ./cube!tex
   ~ ./timer-2!out ./random-3!trigger
   ~ ./random-3!out ./still-1!image
@@ -1184,8 +1200,14 @@ void main() \{
   ~ ./xfader-1!out ./screen!in
   ~ ./composite-3!out ./xfader-1!in-1
   ~ ./cube!out ./xform!in
-  ~ ./xfader-2!out ./composite-3!src
-  ~ ./xform!out ./xfader-2!in-2
   ~ ./osc!val ./custom-2!val
   ~ ./custom-2!out ./xform!scale
+  ~ ./BG01!out-1 ./BgDoodle!in-2
+  ~ ./BgDoodle!out ./composite-1!src
+  ~ ./BG02!out-1 ./FgDoodle!in-2
+  ~ ./FgDoodle!out ./composite-1!in
+  ~ ./custom-1!out ./PulseFader!in-2
+  ~ ./PulseFader!out ./composite-2!in
+  ~ ./xform!out ./CubeFader!in-2
+  ~ ./CubeFader!out ./composite-3!src
 }

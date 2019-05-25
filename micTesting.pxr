@@ -6,8 +6,8 @@
     #%graph.y 189
   }
   @ ./input-1 audio:input {
-    #%graph.x 128
-    #%graph.y 139
+    #%graph.x 11
+    #%graph.y 117
   }
   @ ./fft audio:custom {
     #%graph.x 418
@@ -217,35 +217,36 @@ import java.io.*;
 "
   }
   @ ./send-1 core:routing:send {
-    #%graph.x 612
-    #%graph.y -117
+    #%graph.x 786
+    #%graph.y -103
     .address /Danimal/foreground/waveform.fft-data
   }
   @ ./send-2 core:routing:send {
-    #%graph.x 731
-    #%graph.y -32
+    #%graph.x 786
+    #%graph.y -34
     .address /Danimal/bg/fftRGB.fft-data
   }
   @ ./send-3 core:routing:send {
-    #%graph.x 731
+    #%graph.x 786
     #%graph.y 39
     .address /Danimal/fftTrigger.fft-data
-  }
-  @ ./level-1 audio:analysis:level {
-    #%graph.x 397
-    #%graph.y 39
   }
   @ ./sendScanKick core:routing:send {
     #%graph.x 897
     #%graph.y 129
     .address /Danimal/main_gfx/fftTrigger.fft-data
   }
+  @ ./gain-1 audio:gain {
+    #%graph.x 243
+    #%graph.y -53
+    .level 2.0
+  }
   ~ ./input-1!out-2 ./output!in-2
-  ~ ./input-1!out-1 ./fft!in
   ~ ./fft!power-data ./send-1!in
   ~ ./fft!out ./output!in-1
   ~ ./fft!power-data ./send-2!in
   ~ ./fft!power-data ./send-3!in
-  ~ ./input-1!out-1 ./level-1!in
   ~ ./fft!power-data ./sendScanKick!in
+  ~ ./input-1!out-1 ./gain-1!in
+  ~ ./gain-1!out ./fft!in
 }

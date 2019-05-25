@@ -12,8 +12,8 @@
     .show-cursor true
   }
   @ ./player-1 video:player {
-    #%graph.x 54
-    #%graph.y 23
+    #%graph.x 20
+    #%graph.y 35
     .video file:/C:/Users/Chris%20Langford/Desktop/GoPro%20Viz/Gopr6065-1.m4v
     .rate 2
   }
@@ -76,8 +76,8 @@
     ~ ./in-1!out ./pixelate!src
   }
   @ ./xform video:custom {
-    #%graph.x 315
-    #%graph.y 280
+    #%graph.x 358
+    #%graph.y 248
     .code "
 
     @In(1)
@@ -111,14 +111,14 @@
     .scale 0.8709677419354839
   }
   @ ./composite-1 video:composite {
-    #%graph.x 789
-    #%graph.y 172
+    #%graph.x 814
+    #%graph.y 148
     .mode Difference
     .force-alpha true
   }
   @ ./hsv video:gl:p2d {
-    #%graph.x 652
-    #%graph.y 391
+    #%graph.x 586
+    #%graph.y 309
     .code "
 
     @P(1) @Type.Number(min=0, max=360, def=0) double hue;

@@ -48,10 +48,10 @@
     \}
     
 "
-    .frame-w 773.0
-    .frame-h 650.0
+    .frame-w 789.0
+    .frame-h 607.0
     .offset-x -2.3999999999999986
-    .offset-y 1.6000000000000014
+    .offset-y 2.799999999999997
     .opacity 0.8
   }
   @ ./background video:gl:p2d {
@@ -83,8 +83,8 @@
     \}
 "
     .background [file "resources/Sprites/danimal-metal-tile.png"]
-    .scroll-x -0.8786290287971497
-    .scroll-y -0.5327500104904175
+    .scroll-x -0.9364010691642761
+    .scroll-y -0.22349999845027924
   }
   @ ./composite-1 video:composite {
     #%graph.x 927
@@ -586,8 +586,8 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
     \}
 "
       .background [file "resources/Sprites/danimal-metal-tile.png"]
-      .scroll-x -0.8786290287971497
-      .scroll-y -0.5048145055770874
+      .scroll-x -0.9364010691642761
+      .scroll-y -0.9152005314826965
     }
     @ ./backX core:custom {
       #%graph.x 250
@@ -922,17 +922,17 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
   @ ./HeadFader video:xfader {
     #%graph.x 320
     #%graph.y 397
-    .mix 0.74
+    .mix 0.5
   }
   @ ./BarFader video:xfader {
     #%graph.x 320
     #%graph.y 605
-    .mix 0.882
+    .mix 0.91
   }
   @ ./CrosshairFader video:xfader {
     #%graph.x 577
     #%graph.y 730
-    .mix 0.532
+    .mix 0.506
   }
   ~ ./feedback!out ./composite-1!src
   ~ ./backX!val ./background!scroll-x
