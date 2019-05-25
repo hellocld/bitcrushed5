@@ -40,6 +40,13 @@
         .maximum-y 650
         .layout "cell 4 0"
       }
+      @ ./v-slider4 gui:v-slider {
+        .label fftTrig
+        .binding /Danimal/fftTrigger.trigger-val
+        .minimum 0
+        .maximum 5
+        .layout "cell 5 0"
+      }
     }
     @ ./panel2 gui:panel {
       .label Stevie
@@ -47,37 +54,44 @@
       @ ./v-slider1 gui:v-slider {
         .label Pulse
         .binding /Stevie/PulseFader.mix
-        .layout "cell 0 1"
+        .layout "cell 0 0"
       }
       @ ./v-slider2 gui:v-slider {
         .label BG
         .binding /Stevie/BgDoodle.mix
-        .layout "cell 1 1"
+        .layout "cell 1 0"
       }
       @ ./v-slider3 gui:v-slider {
         .label FG
         .binding /Stevie/FgDoodle.mix
-        .layout "cell 2 1"
+        .layout "cell 2 0"
       }
       @ ./v-slider4 gui:v-slider {
         .label Cube
         .binding /Stevie/CubeFader.mix
-        .layout "cell 3 1"
+        .layout "cell 3 0"
       }
       @ ./combobox1 gui:combobox {
         .label BoxMode
         .binding /Stevie/composite-3.mode
-        .layout "cell 3 2"
+        .layout "cell 3 1"
       }
       @ ./combobox2 gui:combobox {
         .label DoodleMode
         .binding /Stevie/composite-1.mode
-        .layout "cell 1 2"
+        .layout "cell 1 1"
       }
       @ ./combobox3 gui:combobox {
         .label FadeMode
         .binding /Stevie/composite-2.mode
-        .layout "cell 0 2"
+        .layout "cell 0 1"
+      }
+      @ ./v-slider5 gui:v-slider {
+        .label fftTrig
+        .binding /Stevie/fftTrigger.trigger-val
+        .minimum 0
+        .maximum 5
+        .layout "cell 4 0"
       }
     }
     @ ./panel3 gui:panel {
@@ -87,6 +101,55 @@
         .label Video
         .binding /Pulsing/player-1.video
         .layout "cell 0 0"
+      }
+      @ ./panel1 gui:panel {
+        .layout "cell 1 0"
+        @ ./button1 gui:button {
+          .label FGhue
+          .binding /Pulsing/random-1.trigger
+          .layout "cell 0 0"
+        }
+        @ ./button2 gui:button {
+          .label 1
+          .layout "cell 1 0"
+        }
+        @ ./button3 gui:button {
+          .label 2
+          .layout "cell 2 0"
+        }
+        @ ./button4 gui:button {
+          .label 3
+          .layout "cell 3 0"
+        }
+        @ ./button5 gui:button {
+          .label BGhue
+          .binding /Pulsing/random-2.trigger
+          .layout "cell 0 1"
+        }
+        @ ./button6 gui:button {
+          .label 5
+          .layout "cell 1 1"
+        }
+        @ ./button7 gui:button {
+          .label 6
+          .layout "cell 2 1"
+        }
+        @ ./button8 gui:button {
+          .label 7
+          .layout "cell 3 1"
+        }
+      }
+      @ ./combobox1 gui:combobox {
+        .label MixMode
+        .binding /Pulsing/composite-1.mode
+        .layout "cell 0 1"
+      }
+      @ ./v-slider1 gui:v-slider {
+        .label TriggerVal
+        .binding /Pulsing/fftTrigger.trig
+        .minimum 0
+        .maximum 5
+        .layout "cell 2 1"
       }
     }
   }

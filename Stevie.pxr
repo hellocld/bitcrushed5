@@ -61,10 +61,10 @@
     \}
 "
       .background [file "resources/Sprites/doodles/doodle04.png"]
-      .scroll-x -0.9670158624649048
-      .scroll-y -0.23624999821186066
-      .scale-x 1.080264925956726
-      .scale-y 1.4996333122253418
+      .scroll-x -0.20000505447387695
+      .scroll-y -0.0
+      .scale-x 1.5573774576187134
+      .scale-y 1.9479787349700928
     }
     @ ./backX core:custom {
       #%graph.x 187
@@ -255,7 +255,7 @@ void main() \{
     fragRGB = hsv2rgb(fragHSV);
     gl_FragColor = vec4(fragRGB, textureColor.a);
 \}"
-      .hue 89.01017835214816
+      .hue 216.00005686283112
       .value 2.0
     }
     @ ./hue core:custom {
@@ -347,7 +347,7 @@ void main() \{
         image(in, -w2, -h2);
     \}
 "
-      .rotate 89.93400805011785
+      .rotate 170.63618030052027
       .scale 2
     }
     @ ./out-1 video:container:out {
@@ -428,7 +428,7 @@ void main() \{
     \}
     
 "
-      .val 0.08026489615440369
+      .val 0.5573774576187134
     }
     @ ./scaleX1 core:custom {
       #%graph.x 25
@@ -502,7 +502,7 @@ void main() \{
     \}
     
 "
-      .val 0.4996333718299866
+      .val 0.9479787945747375
     }
     @ ./rot1 core:custom {
       #%graph.x 367
@@ -619,8 +619,8 @@ void main() \{
     \}
 "
       .background [file "resources/Sprites/doodles/doodle11.png"]
-      .scroll-x 0.4835079312324524
-      .scroll-y -0.9449999928474426
+      .scroll-x 0.6000025272369385
+      .scroll-y -0.0
     }
     @ ./backX core:custom {
       #%graph.x 269
@@ -811,7 +811,7 @@ void main() \{
     fragRGB = hsv2rgb(fragHSV);
     gl_FragColor = vec4(fragRGB, textureColor.a);
 \}"
-      .hue 178.0204049840586
+      .hue 72.0001620054245
     }
     @ ./hue core:custom {
       #%graph.x 482
@@ -966,6 +966,12 @@ void main() \{
 
     @In(1) PImage tex;
     @Inject Property rotX, rotY, rotZ;
+    @Inject Property s;
+    @T(2) void scale() \{
+        if(!s.isAnimating())
+            s.set(100).to(30).in(0.5);
+
+    \}
     @Override
     public void setup() \{
     \}
@@ -990,7 +996,7 @@ void main() \{
         
             noStroke();
 
-            scale(30);
+            scale(d(s));
             rotateX(d(rotX));
             rotateY(d(rotY));
             //front
@@ -1044,14 +1050,14 @@ void main() \{
     .values [array "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.aseprite" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle01.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle02.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle03.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle04.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle05.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle06.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle07.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle08.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle09.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle10.png" "file:/C:/Projects/Personal/bitcrushed5/resources/Sprites/doodles/doodle11.png"]
   }
   @ ./timer-2 core:timing:timer {
-    #%graph.x -6
-    #%graph.y 454
+    #%graph.x 2
+    #%graph.y 425
     .period .1
   }
   @ ./composite-3 video:composite {
     #%graph.x 1083
     #%graph.y 142
-    .mode Subtract
+    .mode Screen
     .force-alpha true
   }
   @ ./xfader-1 video:xfader {
@@ -1091,7 +1097,7 @@ void main() \{
         image(in, -w2, -h2);
     \}
 "
-    .scale 0.8486135601997375
+    .scale 0.8006612062454224
   }
   @ ./osc core:custom {
     #%graph.x 359
@@ -1162,19 +1168,19 @@ void main() \{
     \}
     
 "
-    .val 0.060766901820898056
+    .val 8.264530915766954E-4
   }
   @ ./BgDoodle video:xfader {
     #%graph.x 433
     #%graph.y 37
     #%graph.minimized true
-    .mix 0.76
+    .mix 0.426
   }
   @ ./FgDoodle video:xfader {
     #%graph.x 433
     #%graph.y 120
     #%graph.minimized true
-    .mix 0.506
+    .mix 0.538
   }
   @ ./PulseFader video:xfader {
     #%graph.x 826
@@ -1187,6 +1193,36 @@ void main() \{
     #%graph.y 337
     #%graph.minimized true
     .mix 1.0
+  }
+  @ ./fftTrigger core:custom {
+    #%graph.x 153
+    #%graph.y 554
+    .code "
+
+    @Out(1) Output out;
+    @P(0) float\[\] fftData;    
+    @P(1) int channel;
+    @P(2) float triggerVal;
+    @Override
+    public void init() \{
+
+    \}
+
+    
+    @Override
+    public void update() \{
+        if(fftData.length > 0) \{
+            if(fftData\[channel\] > triggerVal)
+                out.send();
+        \}
+    \}
+    
+"
+    .fft-data "rO0ABXVyAAJbRgucgYki4AxCAgAAeHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    .channel 4
+    .trigger-val 1.1700000000000002
   }
   ~ ./random-1!out ./BG01!sprite
   ~ ./random-2!out ./BG02!sprite
@@ -1210,4 +1246,5 @@ void main() \{
   ~ ./PulseFader!out ./composite-2!in
   ~ ./xform!out ./CubeFader!in-2
   ~ ./CubeFader!out ./composite-3!src
+  ~ ./fftTrigger!out ./cube!scale
 }

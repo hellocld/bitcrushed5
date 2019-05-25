@@ -239,7 +239,7 @@ import java.io.*;
   @ ./gain-1 audio:gain {
     #%graph.x 243
     #%graph.y -53
-    .level 0.9769112376319998
+    .level 2.0
   }
   @ ./sendPulsing core:routing:send {
     #%graph.x 840

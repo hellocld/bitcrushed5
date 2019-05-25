@@ -1,14 +1,18 @@
 @ /bitcrushed root:video {
-  #%pxr.format 4
   #%autostart true
+  #%praxis.version 4.2.0
+  .renderer OpenGL
   .width 800
   .height 600
   .fps 60.0
-  .renderer OpenGL
   @ ./screen video:output {
-    #%graph.x 600
-    #%graph.y 200
+    #%graph.x 963
+    #%graph.y 355
     .always-on-top true
     .show-cursor true
+  }
+  @ ./xfader-1 video:xfader {
+    #%graph.x 692
+    #%graph.y 90
   }
 }
